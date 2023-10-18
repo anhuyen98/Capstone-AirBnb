@@ -1,5 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { useAuth } from 'hooks';
+import { Navigate, Outlet } from 'react-router-dom';
 export const AuthLayout = () => {
+  const { token } = useAuth()
+  if (token) {
+    return <Navigate to='/home'/>
+  }
   return (
     <div className=''>
       <img src="../images/background.jpg" alt="" className='fixed bg-contain top-0'/>

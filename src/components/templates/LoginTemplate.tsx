@@ -2,13 +2,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginSchema, LoginSchemaType } from "schema";
 import { toast } from "react-toastify";
-import { authServices } from "services";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "constant";
-import { Input } from "components";
+import { Input, Button } from "components";
 import { handleError } from "utils";
+import { RootState, useAppDispatch } from "store";
+import { authLoginThunk } from "store/auth";
+import { useSelector } from 'react-redux'
+
 export const LoginTemplate = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isFetchingLogin } = useSelector((state: RootState) => state.auth)
   const {
     handleSubmit,
     register,
@@ -17,17 +22,19 @@ export const LoginTemplate = () => {
     mode: "onChange",
     resolver: zodResolver(LoginSchema),
   });
+
   const onSubmit: SubmitHandler<LoginSchemaType> = async (value) => {
-    try {
-      console.log({ value });
-      await authServices.login(value);
-      toast.success("Bạn đã đăng ký thành công");
-      navigate(PATH.register);
-    } catch (err) {
-      handleError(err, 'Đăng ký thất bại')
-      handleError(err)
-    }
+    dispatch(authLoginThunk(value))
+      .unwrap()
+      .then(() => {
+        toast.success("Đăng nhập thành công");
+        navigate(PATH.home);
+      })
+      .catch((err) => {
+        handleError(err);
+      });
   };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -54,11 +61,12 @@ export const LoginTemplate = () => {
         register={register}
         errors={errors?.password?.message}
       />
-      
-      
-      <button className="mb-10 mt-[20px] py-[10px] w-full border bg-[#020a17] rounded-6 text-[#ecf6a2]">
-        Đăng Nhập
-      </button>
+
+      <div className="text-right">
+        <Button type="primary" loading={isFetchingLogin} danger htmlType="submit" className="my-[20px]">
+          Đăng Nhập
+        </Button>
+      </div>
     </form>
-  )
-}
+  );
+};
