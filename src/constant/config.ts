@@ -8,6 +8,7 @@ export const PATH = {
     manageBooking: 'admin/manageBooking',
     manageLocation: 'admin/manageLocation',
     user: '/user',
+    userDetail: '/user/:userId',
     room: '/room',
     roomDetail: 'room/roomDetail',
 }

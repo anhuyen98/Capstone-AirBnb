@@ -36,7 +36,7 @@ export const router: RouteObject[] = [
             },
             {
                 element: <User />,
-                path: PATH.user,
+                path: PATH.userDetail,
             },
             {
                 element: <Admin />,
