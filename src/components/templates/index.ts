@@ -1,2 +1,5 @@
-export * from './RegisterTemplate'
-export * from './LoginTemplate'
+export * from './HomeTemplate'
+export * from './admin'
+export * from './auth'
+export * from './room'
+export * from './user'

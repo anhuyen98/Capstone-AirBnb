@@ -1,2 +1,6 @@
 export * from './Login'
 export * from './Register'
+export * from './Home'
+export * from './Admin'
+export * from './Room'
+export * from './User'

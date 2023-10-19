@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import { PATH } from "constant";
-import { AuthLayout, MainLayouts } from "components";
-import { Login, Register } from "pages";
+import { AuthLayout, MainLayouts, ManageBookingTemplate, ManageLocationTemplate, ManageRoomTemplate, ManageUserTemplate, RoomDetailTemplate } from "components";
+import { Admin, Home, Login, Register, Room, User } from "pages";
 
 export const router: RouteObject[] = [
     {
@@ -19,6 +19,47 @@ export const router: RouteObject[] = [
     },
     {
         element: <MainLayouts />,
-        path: PATH.home
+        children: [
+            {
+                element: <Home />,
+                path: PATH.home,
+            },
+            {
+                element: <Room />,
+                path: PATH.room,
+                children: [
+                    {
+                        element: <RoomDetailTemplate />,
+                        path: PATH.roomDetail
+                    }
+                ]
+            },
+            {
+                element: <User />,
+                path: PATH.user,
+            },
+            {
+                element: <Admin />,
+                path: PATH.admin,
+                children: [
+                    {
+                        element: <ManageUserTemplate />,
+                        path: PATH.manageUser
+                    },
+                    {
+                        element: <ManageLocationTemplate />,
+                        path: PATH.manageLocation
+                    },
+                    {
+                        element: <ManageRoomTemplate />,
+                        path: PATH.manageRoom
+                    },
+                    {
+                        element: <ManageBookingTemplate />,
+                        path: PATH.manageBooking
+                    }
+                ]
+            }
+        ]
     }
 ]
