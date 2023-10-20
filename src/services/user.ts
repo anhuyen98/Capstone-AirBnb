@@ -6,5 +6,6 @@ const api = apiInstance({
 })
 
 export const userServices = {
-    getUserById: (path: number) => api.get<ApiResponse<UserLogin>>(`/${path}`)
+    getUserById: (path: number) => api.get<ApiResponse<UserLogin>>(`/${path}`),
+    getListUser: () => api.get<ApiResponse<UserLogin[]>>('')
 }

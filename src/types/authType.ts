@@ -3,7 +3,7 @@ export type UserLogin = {
   name?: string;
   email?: string;
   password?: string;
-  phone?: string;
+  phone?: number;
   birthday?: string;
   avatar?: string;
   gender?: boolean;

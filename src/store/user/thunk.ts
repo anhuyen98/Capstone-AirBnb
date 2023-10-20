@@ -12,3 +12,14 @@ export const getUserByIdThunk = createAsyncThunk(
         }
     }
 )
+
+export const getListUserThunk = createAsyncThunk(
+    'user/getListUser', async(_, {rejectWithValue}) => {
+        try {
+            const data = await userServices.getListUser()
+            return data.data.content
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)
