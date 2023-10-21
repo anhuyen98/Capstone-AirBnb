@@ -4,55 +4,48 @@ import styled from 'styled-components'
 export const Footer = () => {
   return (
     <Container className="mt-[100px] flex flex-col">
-      {/* <img
-                className="w-full"
-                src="https://cinestar.com.vn/catalog/view/theme/default/images/line-bg.png"
-                alt="..."
-            /> */}
       <hr />
       <div className="footer-content">
 
         <div className="mt-[40px] flex gap-[300px] info">
           <div>
             <p className="font-700 text-20">
-              <span className="text-[var(--primary-color)]">Hỗ trợ</span>
-
+              <span>Hỗ trợ</span>
             </p>
-            <NavLink to="">Trung tâm trợ giúp</NavLink>
-            <NavLink to="">AirCover</NavLink>
-            <NavLink to="">Chống phân biệt đối xử</NavLink>
-            <NavLink to="">Hỗ trợ người khuyết tật</NavLink>
-            <NavLink to="">Các tùy chọn hủy</NavLink>
-            <NavLink to="">Báo cáo lo ngại của khu dân cư</NavLink>
+            <NavLink to="">Trung tâm trợ giúp</NavLink><br />
+            <NavLink to="">AirCover</NavLink><br />
+            <NavLink to="">Chống phân biệt đối xử</NavLink><br />
+            <NavLink to="">Hỗ trợ người khuyết tật</NavLink><br />
+            <NavLink to="">Các tùy chọn hủy</NavLink><br />
+            <NavLink to="">Báo cáo lo ngại của khu dân cư</NavLink><br />
           </div>
           <div>
             <p className="font-700 text-20">
               <span>Đón tiếp khách</span>
             </p>
-            <NavLink to="">Cho thuê nhà trên Airbnb</NavLink>
-            <NavLink to="">AirCover cho Chủ nhà</NavLink>
-            <NavLink to="">Tài nguyên về đón tiếp khách</NavLink>
-            <NavLink to="">Diễn đàn cộng đồng</NavLink>
-            <NavLink to="">Đón tiếp khách có trách nhiệm</NavLink>
+            <NavLink to="">Cho thuê nhà trên Airbnb</NavLink><br />
+            <NavLink to="">AirCover cho Chủ nhà</NavLink><br />
+            <NavLink to="">Tài nguyên về đón tiếp khách</NavLink><br />
+            <NavLink to="">Diễn đàn cộng đồng</NavLink><br />
+            <NavLink to="">Đón tiếp khách có trách nhiệm</NavLink><br />
           </div>
           <div>
             <p className="font-700 text-20">
               <span>Airbnb</span>
             </p>
-            <NavLink to="">Trang tin tức</NavLink>
-            <NavLink to="">Tính năng mới</NavLink>
-            <NavLink to="">Cơ hội nghề nghiệp</NavLink>
-            <NavLink to="">Nhà đầu tư</NavLink>
-            <NavLink to="">Chỗ ở khẩn cấp Airbnb.org</NavLink>
+            <NavLink to="">Trang tin tức</NavLink><br />
+            <NavLink to="">Tính năng mới</NavLink><br />
+            <NavLink to="">Cơ hội nghề nghiệp</NavLink><br />
+            <NavLink to="">Nhà đầu tư</NavLink><br />
+            <NavLink to="">Chỗ ở khẩn cấp Airbnb.org</NavLink><br />
           </div>
-
         </div>
-        <div className="mt-[100px] grid grid-cols-2  gap-[700px]">
-          <div className="p-[10px]">
+        <div className="mt-[100px] grid grid-cols-2 gap-[700px]">
+          <div className="left">
             <NavLink to="">© 2023 Airbnb, Inc.</NavLink>
-            <i className="fa-solid fa-circle fa-2xs"></i>           
+            <span> ‧ </span>
             <NavLink to="">Quyền riêng tư</NavLink>
-            <i className="fa-solid fa-circle fa-2xs"></i>
+            <span> ‧ </span>
             <NavLink to="">Điều khoản</NavLink>
           </div>
           <div className="social">
@@ -92,18 +85,6 @@ const Container = styled.footer`
                 transition: all 0.3s ease-in-out;
                 &:hover {
                     color: var(--primary-color);
-                }
-            }
-        }
-
-        .info {
-            a {
-                transition: all 0.3s ease-in-out;
-                display: block;
-                margin-top: 16px;
-                &:hover {
-                    color: var(--primary-color);
-                    text-shadow: var(--primary-color) 0 0 1px;
                 }
             }
         }
