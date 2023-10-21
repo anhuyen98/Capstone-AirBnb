@@ -49,17 +49,23 @@ export const Footer = () => {
             <NavLink to="">Điều khoản</NavLink>
           </div>
           <div className="social">
+            <nav className="globe-icon">
+              <NavLink to="">
+                <i className="fa-solid fa-globe"></i>
+                <span> Tiếng Việt (VN)</span>
+              </NavLink>
+            </nav>
+            <NavLink to="">
+              <span>$ USD</span>
+            </NavLink>
             <NavLink to="https://www.facebook.com" target="_blank">
               <i className="fa-brands fa-facebook"></i>
-            </NavLink>
-            <NavLink to="https://www.instagram.com" target="_blank">
-              <i className="fa-brands fa-instagram"></i>
             </NavLink>
             <NavLink to="https://www.twitter.com" target="_blank">
               <i className="fa-brands fa-twitter"></i>
             </NavLink>
-            <NavLink to="https://www.youtube.com" target="_blank">
-              <i className="fa-brands fa-youtube"></i>
+            <NavLink to="https://www.instagram.com" target="_blank">
+              <i className="fa-brands fa-instagram"></i>
             </NavLink>
           </div>
 
@@ -76,10 +82,10 @@ const Container = styled.footer`
         padding: 20px 40px;
 
         .social {
-            font-size: 26px;
+            font-size: 16px;
             color: #111;
             display: flex;
-            gap: 30px;
+            gap: 20px;
             i {
                 cursor: pointer;
                 transition: all 0.3s ease-in-out;
