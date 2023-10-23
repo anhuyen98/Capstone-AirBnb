@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <Container>
       <div className='header-content'>
-        <div className="mb-[20px] flex items-center gap-[100px]">
+        <div className="mb-[20px] flex justify-between items-center gap-[100px]">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
             alt='horse'
@@ -51,12 +51,12 @@ export const Header = () => {
 const Container = styled.header`
   .header-content {
         padding: 0 40px;
-        max-width: var(--max-width);
+        max-width: 1920px;
         height: 100%;
         margin: auto;
-        display: flex;
+        /* display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-between; */
   }      
   .search {
             border: 1px solid #f7f7f7;
