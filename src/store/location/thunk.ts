@@ -11,3 +11,13 @@ export const getListLocationThunk = createAsyncThunk(
         }
     }
 )
+
+// export const postLocationThunk = createAsyncThunk(
+//     'location/postUser', async() => {
+//         try {
+//             const data = await
+//         } catch (error) {
+            
+//         }
+//     }
+// )

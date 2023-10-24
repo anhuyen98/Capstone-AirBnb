@@ -6,5 +6,6 @@ const api = apiInstance({
 })
 
 export const locationServices = {
-    getListLocation: () => api.get<ApiResponse<LocationType[]>>('')
+    getListLocation: () => api.get<ApiResponse<LocationType[]>>(''),
+    postLocation: (data: LocationType) => api.post<ApiResponse<LocationType>>('', data)
 }
