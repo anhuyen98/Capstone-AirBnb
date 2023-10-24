@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <Container>
       <div className='header-content'>
-        <div className="mb-[20px] flex justify-between items-center gap-[100px]">
+        <div className="mb-[20px] flex justify-center items-center gap-[70px]">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
             alt='horse'
@@ -50,21 +50,15 @@ export const Header = () => {
 
 const Container = styled.header`
   .header-content {
-        padding: 0 40px;
-        max-width: 1920px;
-        height: 100%;
-        margin: auto;
-        /* display: flex;
-        align-items: center;
-        justify-content: space-between; */
+    max-width: var(--max-width);
+    margin: auto;
+    padding: 20px 40px;
+        
   }      
   .search {
-            border: 1px solid #f7f7f7;
-            display: flex;
-            align-items: center;           
-            border-radius: 50px;
-            overflow: hidden;
-            .btn-search {
+    display: flex;
+    align-items: center;
+    .btn-search {
                 height: 46px !important;
                 border: none;
                 border-radius: 50%;
@@ -74,25 +68,25 @@ const Container = styled.header`
                 &:hover {
                     color: var(--primary-color) !important;
                 }
-            }
-            input {
+    }
+    input {
                 background: transparent;
                 color: #111;
                 outline: none;
                 text-align: center;
-            }
-            .btn-text.dir {
+    }
+    .btn-text.dir {
               background: transparent;
               cursor: pointer;
               padding: 0;
               text-align: inherit;
               border: none;             
               margin-left: 20px;
-            }
-            span {
+    }
+    span {
               font-size: large;
               font-weight: 500;
-            }
+    }
   }
   .nav-right {
     font-size: larger;
