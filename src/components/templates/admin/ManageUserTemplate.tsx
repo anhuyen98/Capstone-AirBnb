@@ -7,6 +7,7 @@ import {
   deleteUserThunk,
   getListUserThunk,
   getUserByIdThunk,
+  updateUserThunk,
   userActions,
 } from "store/user";
 import { Modal, Space, Table } from "antd";
@@ -46,8 +47,11 @@ export const ManageUserTemplate = () => {
   };
   const onUpdate: SubmitHandler<RegisterSchemaType> = async(value) => {
     try {
-      const id = Number(queryUrl.id)
-      await userServices.putUser(id, value)
+      const payload = {
+        id: Number(queryUrl.id),
+        dataPayLoad: value
+      }
+      await dispatch(updateUserThunk(payload))
       reset()
       toast.success('Cập nhật thành công')
     } catch (error) {

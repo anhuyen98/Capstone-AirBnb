@@ -35,9 +35,9 @@ export const deleteUserThunk = createAsyncThunk(
     }
 )
 
-export const editUserThunk = createAsyncThunk(
+export const updateUserThunk = createAsyncThunk(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    'user/editUser', async(payload: any, {rejectWithValue}) => {
+    'user/updateUser', async(payload: any, {rejectWithValue}) => {
         try {
             const {id, dataPayLoad} = payload 
             const data = await userServices.putUser(id, dataPayLoad)

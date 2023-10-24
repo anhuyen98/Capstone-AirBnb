@@ -21,8 +21,6 @@ const userSlice = createSlice({
       state.isEditing = false
     },
     deleteItemListUser:(state ,{payload}: PayloadAction<number>)=>{
-      // :PayloadAction<UserLogin[]>
-      // state.listUser = [...payload]
       state.listUser = state.listUser.filter((user) => user.id !== payload)
     }
   },
@@ -34,9 +32,6 @@ const userSlice = createSlice({
       .addCase(getListUserThunk.fulfilled, (state, { payload }) => {
         state.listUser = payload
       })
-      // .addCase(deleteUserThunk.fulfilled, (state, {payload}) => {
-      //   state.listUser = state.listUser.filter((user) => user.id !== payload)
-      // })
   },
 });
 
