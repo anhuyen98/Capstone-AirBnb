@@ -6,5 +6,6 @@ const api = apiInstance({
 })
 
 export const roomServices = {
-    getListRoom: () => api.get<ApiResponse<RoomType[]>>('')
+    getListRoom: () => api.get<ApiResponse<RoomType[]>>(''),
+    getListRoomByLocal: (mvt: number) => api.get<ApiResponse<RoomType[]>>(`/lay-phong-theo-vi-tri?maViTri=${mvt}`)
 }

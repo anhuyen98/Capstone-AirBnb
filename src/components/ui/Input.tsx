@@ -1,6 +1,9 @@
 import { HTMLInputTypeAttribute } from "react";
 import { UseFormRegister } from "react-hook-form";
 type InputProps = {
+  ref?: React.LegacyRef<HTMLInputElement>,
+  onChange?: React.ChangeEventHandler<HTMLInputElement>,
+  value?: string | number | readonly string[],
   name?: string;
   label?: string;
   id?: string;
@@ -13,6 +16,9 @@ type InputProps = {
 };
 
 export const Input = ({
+  ref,
+  onChange,
+  value,
   name,
   label,
   id,
@@ -26,14 +32,17 @@ export const Input = ({
     <div className="mt-16">
       {!!label && <label htmlFor={id}>{label}</label>}
       <input
+        ref={ref}
         name={name}
         id={id}
         placeholder={placeholder}
         type={type}
         className={className}
+        value={value}
+        onChange={onChange}
         {...register?.(name)}
       />
-      {!!errors && <p className="text-red-800 ">{errors}</p>}
+      {!!errors && <p className="text-red-800 ">{errors || ''}</p>}
     </div>
   );
 };

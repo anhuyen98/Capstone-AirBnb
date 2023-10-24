@@ -1,4 +1,5 @@
 import { apiInstance } from "constant/apiInstance"
+import { RegisterSchemaType } from "schema"
 import { UserLogin } from "types"
 
 const api = apiInstance({
@@ -7,5 +8,8 @@ const api = apiInstance({
 
 export const userServices = {
     getUserById: (path: number) => api.get<ApiResponse<UserLogin>>(`/${path}`),
-    getListUser: () => api.get<ApiResponse<UserLogin[]>>('')
+    getListUser: () => api.get<ApiResponse<UserLogin[]>>(''),
+    deleteUser: (id: number) => api.delete<ApiResponse<null>>(`?id=${id}`),
+    postUser: (data: RegisterSchemaType) => api.post('', data),
+    putUser: (path: number, data: UserLogin) => api.put<ApiResponse<UserLogin>>(`/${path}`, data)
 }

@@ -27,22 +27,21 @@ export const router: RouteObject[] = [
             {
                 element: <Room />,
                 path: PATH.room,
-                children: [
-                    {
-                        element: <RoomDetailTemplate />,
-                        path: PATH.roomDetail
-                    }
-                ]
             },
+            {
+                element: <RoomDetailTemplate />,
+                path: PATH.roomDetail
+            }
+            ,
             {
                 element: <User />,
                 path: PATH.userDetail,
             },
             {
                 element: <Admin />,
-                path: PATH.admin,
                 children: [
                     {
+                        index: true,
                         element: <ManageUserTemplate />,
                         path: PATH.manageUser
                     },

@@ -23,3 +23,27 @@ export const getListUserThunk = createAsyncThunk(
         }
     }
 )
+
+export const deleteUserThunk = createAsyncThunk(
+    'user/deleteUser', async(payload: number, {rejectWithValue}) => {
+        try {
+            const data = await userServices.deleteUser(payload)
+            return data.data
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)
+
+export const editUserThunk = createAsyncThunk(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    'user/editUser', async(payload: any, {rejectWithValue}) => {
+        try {
+            const {id, dataPayLoad} = payload 
+            const data = await userServices.putUser(id, dataPayLoad)
+            console.log("data: ", data);
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)

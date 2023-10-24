@@ -1,6 +1,4 @@
 export * from './authType'
 export * from './bookingType'
-export * from './commentType'
 export * from './locationType'
 export * from './roomType'
-export * from './userType'

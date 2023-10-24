@@ -11,3 +11,14 @@ export const getListRoomThunk = createAsyncThunk(
         }
     }
 )
+
+export const getListRoomByLocalThunk = createAsyncThunk(
+    'room/getListRoomByLocal', async(mvt: number, {rejectWithValue}) => {
+        try {
+            const data = await roomServices.getListRoomByLocal(mvt)
+            return data.data.content
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)
