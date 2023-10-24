@@ -18,14 +18,14 @@ export const HomeTemplate = () => {
       <MainWrapper id="main-content">
         <Carousel />
         <p className="!mt-4"><span>Khám phá những điểm đến gần đây</span></p>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 content">
           {
             listLocation?.map((vitri) => (
               <Card
-                style={{ width: "100px", height:"100%" }}
-                className="!mt-5"
+                style={{ width: "80%" }}
+                className="!mt-5 flex justify-center"
+                title={vitri.tenViTri}
                 cover={<img src={vitri.hinhAnh} alt="slide" />}
-                title={vitri.tinhThanh}
                 // title={vitri.tenViTri}
                 bordered={false}
               >
@@ -44,4 +44,7 @@ const MainWrapper = styled.div`
         max-width: var(--max-width);
         margin: auto;
         padding: 40px;
+        .content {
+          
+        }
 `
