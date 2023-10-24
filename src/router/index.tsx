@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import { PATH } from "constant";
-import { AuthLayout, MainLayouts, ManageBookingTemplate, ManageLocationTemplate, ManageRoomTemplate, ManageUserTemplate, RoomDetailTemplate } from "components";
-import { Admin, Home, Login, Register, Room, User } from "pages";
+import { AdminLayout, AuthLayout, MainLayouts, ManageBookingTemplate, ManageLocationTemplate, ManageRoomTemplate, ManageUserTemplate, RoomDetailTemplate } from "components";
+import { Home, Login, Register, Room, User } from "pages";
 
 export const router: RouteObject[] = [
     {
@@ -37,27 +37,28 @@ export const router: RouteObject[] = [
                 element: <User />,
                 path: PATH.userDetail,
             },
+            
+        ]
+    },
+    {
+        element: <AdminLayout />,
+        children: [
             {
-                element: <Admin />,
-                children: [
-                    {
-                        index: true,
-                        element: <ManageUserTemplate />,
-                        path: PATH.manageUser
-                    },
-                    {
-                        element: <ManageLocationTemplate />,
-                        path: PATH.manageLocation
-                    },
-                    {
-                        element: <ManageRoomTemplate />,
-                        path: PATH.manageRoom
-                    },
-                    {
-                        element: <ManageBookingTemplate />,
-                        path: PATH.manageBooking
-                    }
-                ]
+                index: true,
+                element: <ManageUserTemplate />,
+                path: PATH.manageUser
+            },
+            {
+                element: <ManageLocationTemplate />,
+                path: PATH.manageLocation
+            },
+            {
+                element: <ManageRoomTemplate />,
+                path: PATH.manageRoom
+            },
+            {
+                element: <ManageBookingTemplate />,
+                path: PATH.manageBooking
             }
         ]
     }

@@ -14,14 +14,14 @@ import { PATH } from "constant";
 
 const { Header, Sider, Content } = Layout;
 
-export const AdminTemplate = () => {
+export const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   return (
     <div>
-      <h1>AdminTemplate</h1>
+      <h1>AdminLayout</h1>
 
       <Layout>
         <Sider
