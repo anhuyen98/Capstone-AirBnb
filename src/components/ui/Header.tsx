@@ -1,6 +1,6 @@
 // import { styled } from 'styled-components'
 import { NavLink } from 'react-router-dom'
-import { Input, Button } from 'components'
+import { Input, Button, Avatar } from 'components'
 import styled from 'styled-components'
 
 
@@ -27,6 +27,7 @@ export const Header = () => {
             <Button className='btn-search'>
               <i className="fa-solid fa-magnifying-glass"></i>
             </Button>
+            
           </div>
           <div className="nav-right flex gap-[50px]">
             <nav className="nav-text">
@@ -38,7 +39,11 @@ export const Header = () => {
               </NavLink>
             </nav>
             <div className="avatar-info">
-              <i className="fa-solid fa-address-card"></i>
+              {/* <i className="fa-solid fa-address-card"></i> */}
+              <Avatar size="large" >
+                <i className="fa-solid fa-bars"></i>
+                <i className="fa-regular fa-user text-20"></i>
+              </Avatar>
             </div>
           </div>
         </div>
