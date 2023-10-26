@@ -1,15 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
-import { getListRoomThunk } from "store/room";
-import { Space, Table } from "antd";
+import {
+  deleteRoomByIdThunk,
+  getListRoomThunk,
+  getRoomByIdThunk,
+  postRoomThunk,
+} from "store/room";
+import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { Button, Input } from "components";
+import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
+import { RoomSchema, RoomSchemaType } from "schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { handleError } from "utils";
+import { toast } from "react-toastify";
 export const ManageRoomTemplate = () => {
-  const { listRoom } = useSelector((state: RootState) => state.room);
-
+  console.log('Render')
+  const { listRoom, room } = useSelector((state: RootState) => state.room);
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<RoomSchemaType>({
+    mode: "onChange",
+    resolver: zodResolver(RoomSchema),
+  });
+  const onSubmit: SubmitHandler<RoomSchemaType> = async (value) => {
+    try {
+      await dispatch(postRoomThunk(value));
+      toast.success("Thêm phòng thành công");
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  const onError: SubmitErrorHandler<RoomSchemaType> = (value) => {
+    console.log(value);
+  };
   // Table
   type DataType = {
-    key?: number;
+    id?: number;
     giaTien?: number;
     tenPhong?: string;
     khach?: number;
@@ -19,27 +50,27 @@ export const ManageRoomTemplate = () => {
   const columns: ColumnsType<DataType> = [
     {
       title: "ID",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "id",
+      key: "id",
       render: (text) => <p>{text}</p>,
     },
     {
       title: "Hình ảnh",
       dataIndex: "hinhAnh",
       key: "hinhAnh",
-      render: (image) => <img width='500px' src={image} alt="" />,
+      render: (image) => <img width="500px" src={image} alt="" />,
     },
     {
       title: "Tên phòng",
       dataIndex: "tenPhong",
       key: "tenPhong",
-      render: (text) => <p style={{width: '200px'}}>{text}</p>,
+      render: (text) => <p style={{ width: "200px" }}>{text}</p>,
     },
     {
       title: "Giá/ Ngày",
       dataIndex: "giaTien",
       key: "giaTien",
-      render: (text) => <p style={{width: '30px'}}>{text} $</p>,
+      render: (text) => <p style={{ width: "30px" }}>{text} $</p>,
     },
     {
       title: "Số lượng khách",
@@ -53,9 +84,31 @@ export const ManageRoomTemplate = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.key}</a>
-          <a>Chỉnh sửa</a>
-          <a>Xóa</a>
+          <Button
+            onClick={() => {
+              dispatch(getRoomByIdThunk(record.id))
+                .unwrap()
+                .then(() => {
+                  setIsModal2Open(true);
+                });
+            }}
+          >
+            Chỉnh sửa
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(deleteRoomByIdThunk(record.id))
+                .unwrap()
+                .then(() => {
+                  toast.success("Xóa thành công");
+                })
+                .catch((error) => {
+                  handleError(error);
+                });
+            }}
+          >
+            Xóa
+          </Button>
         </Space>
       ),
     },
@@ -63,35 +116,164 @@ export const ManageRoomTemplate = () => {
 
   const data: DataType[] = listRoom?.map((room) => {
     return {
-      key: room.id,
+      id: room.id,
       giaTien: room.giaTien,
       tenPhong: room.tenPhong,
       khach: room.khach,
       hinhAnh: room.hinhAnh,
     };
   });
-
-  const dispatch = useAppDispatch()
+  // Modal
+  const [isModal1Open, setIsModal1Open] = useState(false);
+  const [isModal2Open, setIsModal2Open] = useState(false);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getListRoomThunk())
-  }, [dispatch])
+    dispatch(getListRoomThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    reset(room);
+  }, [reset, room]);
   return (
     <div>
-      ManageRoomTemplate
+
+      {/* Button Room+ */}
+      <div className="m-5">
+        <Button type="primary" onClick={() => setIsModal1Open(true)}>
+          Thêm phòng
+        </Button>
+      </div>
+      {/* Modal Room*/}
+      <Modal
+        title="Thêm Phòng"
+        open={isModal1Open}
+        onCancel={() => {
+          setIsModal1Open(false);
+        }}
+        footer={null}
+      >
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <Input
+            label="ID"
+            name="id"
+            placeholder="Nhập ID"
+            type="text"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.id?.message}
+          />
+          <Input
+            label="Tên phòng"
+            name="tenPhong"
+            placeholder="Nhập tên phòng"
+            type="text"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.tenPhong?.message}
+          />
+          <Input
+            label="Mô tả"
+            name="moTa"
+            placeholder="Nhập mô tả"
+            type="text"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.moTa?.message}
+          />
+          <Input
+            label="Giá tiền"
+            placeholder="Nhập giá tiền"
+            name="giaTien"
+            type="text"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.giaTien?.message}
+          />
+          <Input
+            label="Hình ảnh"
+            placeholder="Nhập hình ảnh"
+            type="text"
+            name="hinhAnh"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.hinhAnh?.message}
+          />
+          <Input
+            label="Khách"
+            placeholder="Nhập số khách"
+            type="text"
+            name="khach"
+            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
+            register={register}
+            errors={errors?.khach?.message}
+          />
+          <div className="text-right">
+            <Button htmlType="submit" type="primary" className="mt-5">
+              Đăng Ký
+            </Button>
+          </div>
+        </form>
+      </Modal>
+      {/* Modal Thông tin Room */}
+      <Modal
+        title="Thông tin vị trí"
+        open={isModal2Open}
+        onCancel={() => {
+          setIsModal2Open(false);
+        }}
+        onOk={() => {
+          setIsModal2Open(false);
+        }}
+        okText="Cập Nhật"
+        cancelText="Hủy"
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <div>
+            <OkBtn />
+            <CancelBtn />
+          </div>
+        )}
+      >
+        <form className="my-5" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="ID"
+            name="id"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white disabled:"
+            register={register}
+          />
+          <Input
+            label="Tên phòng"
+            name="tenPhong"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Mô tả"
+            name="moTa"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Giá tiền"
+            name="giaTien"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Số lượng khách"
+            name="khach"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Hình ảnh"
+            name="hinhAnh"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+        </form>
+      </Modal>
       {/* Show UI listRoom */}
       <Table columns={columns} dataSource={data} />
-      
-      {/* {listRoom?.map((room) => {
-        return (
-          <div>
-            <span className="mr-5">{room.id}</span>
-            <span className="mr-5">{room.giaTien}$</span>
-            <span className="mr-5">{room.tenPhong}</span>
-            <span className="mr-5">{room.khach}</span>
-            <img src={room.hinhAnh} className="w-[400px]" />
-          </div>
-        );
-      })} */}
     </div>
   );
-}
+};

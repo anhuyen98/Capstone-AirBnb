@@ -24,6 +24,7 @@ export const ManageUserTemplate = () => {
   const dispatch = useAppDispatch();
   const [queryUrl, setQueryUrl] = useQueryUrl()
   console.log("queryUrl: ", queryUrl);
+  console.log('RE-RENDER')
   const { listUser, user, isEditing } = useSelector(
     (state: RootState) => state.user
   );
@@ -47,12 +48,22 @@ export const ManageUserTemplate = () => {
   };
   const onUpdate: SubmitHandler<RegisterSchemaType> = async(value) => {
     try {
+      console.log(value)
       const payload = {
         id: Number(queryUrl.id),
         dataPayLoad: value
       }
+      console.log("payload: ", payload);
       await dispatch(updateUserThunk(payload))
-      reset()
+      reset({
+        'name': '',
+        'birthday': '',
+        'email': '',
+        'gender': false,
+        'password': '',
+        'phone': '',
+        'role': ''
+      });
       toast.success('Cập nhật thành công')
     } catch (error) {
       handleError(error, 'Cập nhật thất bại')
@@ -109,7 +120,7 @@ export const ManageUserTemplate = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button form="edit"
+          <Button
             onClick={() => {
               setQueryUrl({
                 id: String(record.key) || undefined
@@ -166,7 +177,6 @@ export const ManageUserTemplate = () => {
 
   return (
     <div>
-      ManageUserTemplate
       {/* Button QTV+ */}
       <div className="m-5">
         <Button type="primary" onClick={() => setIsModal1Open(true)}>
@@ -179,7 +189,15 @@ export const ManageUserTemplate = () => {
         open={isModal1Open}
         onCancel={() => {
           setIsModal1Open(false);
-          reset();
+          reset({
+            'name': '',
+            'birthday': '',
+            'email': '',
+            'gender': false,
+            'password': '',
+            'phone': '',
+            'role': ''
+          });
         }}
         footer={null}
       >
@@ -261,15 +279,19 @@ export const ManageUserTemplate = () => {
             id: undefined
           })
           setIsModal2Open(false);
-          reset()
+          reset({
+            'name': '',
+            'birthday': '',
+            'email': '',
+            'gender': false,
+            'password': '',
+            'phone': '',
+            'role': ''
+          });
           dispatch(userActions.cancelEditing());
         }}
-        onOk={() => {
-          setIsModal2Open(false);
-        }}
-        okText="Cập Nhật"
         cancelText="Hủy"
-        footer={(_, { OkBtn, CancelBtn }) => (
+        footer={(_, { CancelBtn }) => (
           <div>
             <Button
               onClick={() => {
@@ -278,7 +300,7 @@ export const ManageUserTemplate = () => {
             >
               Chỉnh sửa
             </Button>
-            <OkBtn />
+            
             <CancelBtn />
           </div>
         )}
@@ -288,43 +310,49 @@ export const ManageUserTemplate = () => {
             <Input
               label="ID"
               name="id"
-              className={cn("m-6 py-3 px-4 pointer-events-none", {
-                isEditing: isEditing,
-              })}
-              register={register}
+              className="my-[15px] mx-5 py-3 px-4 pointer-events-none"
             />
             <Input
+            type="text"
               label="Ngày/ tháng/ năm"
               name="birthday"
-              className={cn("m-6 py-3 px-4 pointer-events-none", {
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
                 isEditing: isEditing,
               })}
               register={register}
+              errors={errors?.birthday?.message}
             />
             <Input
+            type="text"
               label="Email"
               name="email"
-              className={cn("m-6 py-3 px-4 pointer-events-none", {
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
                 isEditing: isEditing,
               })}
               register={register}
+              errors={errors?.email?.message}
             />
             <Input
+            type="text"
               label="Tên"
               name="name"
-              className={cn("m-6 py-3 px-4 pointer-events-none", {
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
                 isEditing: isEditing,
               })}
               register={register}
+              errors={errors?.name?.message}
             />
             <Input
+            type="text"
               label="Chức vụ"
               name="role"
-              className={cn("m-6 py-3 px-4 pointer-events-none", {
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
                 isEditing: isEditing,
               })}
               register={register}
+              errors={errors?.role?.message}
             />
+            <Button htmlType="submit">Cập nhật nè</Button>
           </form>
         </ContainerForm>
       </Modal>

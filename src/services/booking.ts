@@ -1,4 +1,5 @@
 import { apiInstance } from "constant/apiInstance";
+import { BookingSchemaType } from "schema/BookingSchema";
 import { BookingType } from "types";
 
 const api = apiInstance({
@@ -6,5 +7,8 @@ const api = apiInstance({
 })
 
 export const bookingServices = {
-    getListBooking: () => api.get<ApiResponse<BookingType[]>>('')
+    getListBooking: () => api.get<ApiResponse<BookingType[]>>(''),
+    postBooking: (data: BookingSchemaType) => api.post<ApiResponse<BookingType>>('', data),
+    getBookingById: (id: number) => api.get<ApiResponse<BookingType>>(`/${id}`),
+    deleteBookingById: (id: number) => api.delete<ApiResponse<BookingType>>(`/${id}`)
 }

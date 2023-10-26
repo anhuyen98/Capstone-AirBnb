@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RoomType } from "types";
-import { getListRoomByLocalThunk, getListRoomThunk } from ".";
+import { getListRoomByLocalThunk, getListRoomThunk, getRoomByIdThunk } from ".";
 
 type RoomInitialState = {
     listRoom?: RoomType[]
+    room?: RoomType
     listRoomByLocal?: RoomType[]
 }
 const initialState: RoomInitialState = {}
@@ -17,6 +18,9 @@ const roomSlice = createSlice({
         })
         .addCase(getListRoomByLocalThunk.fulfilled, (state, {payload}) => {
             state.listRoomByLocal = payload
+        })
+        .addCase(getRoomByIdThunk.fulfilled, (state, {payload}) => {
+            state.room = payload
         })
     },
 })

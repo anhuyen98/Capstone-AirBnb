@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
-import { getListLocationThunk } from "store/location";
+import {
+  getListLocationThunk,
+  getLocationIdThunk,
+  locationActions,
+} from "store/location";
 import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -12,8 +16,10 @@ import { Button, Input } from "components";
 import { LocationSchema, LocationSchemaType } from "schema/LocationSchema";
 import { locationServices } from "services";
 export const ManageLocationTemplate = () => {
-  const { listLocation } = useSelector((state: RootState) => state.location);
-  const dispatch = useAppDispatch()
+  const { listLocation, location } = useSelector(
+    (state: RootState) => state.location
+  );
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     reset,
@@ -21,20 +27,26 @@ export const ManageLocationTemplate = () => {
     formState: { errors },
   } = useForm<LocationSchemaType>({
     mode: "onChange",
-    resolver: zodResolver(LocationSchema)
+    resolver: zodResolver(LocationSchema),
   });
   const onSubmit: SubmitHandler<LocationSchemaType> = async (value) => {
     try {
-      await locationServices.postLocation(value)
-      reset();
-      toast.success("Đăng ký thành công");
+      await locationServices.postLocation(value);
+      dispatch(locationActions.addLocation(value));
+      reset({
+        'hinhAnh': '',
+        'quocGia': '',
+        'tenViTri': '',
+        'tinhThanh': ''
+      });
+      toast.success("Thêm mới thành công");
     } catch (error) {
-      handleError(error, "Đăng ký thất bại");
+      handleError(error, "Thêm mới thất bại");
     }
   };
   // Table
   type DataType = {
-    key?: number;
+    id?: number;
     hinhAnh?: string;
     tenViTri?: string;
     tinhThanh?: string;
@@ -44,8 +56,8 @@ export const ManageLocationTemplate = () => {
   const columns: ColumnsType<DataType> = [
     {
       title: "ID",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "id",
+      key: "id",
       render: (text) => <p>{text}</p>,
     },
     {
@@ -78,9 +90,29 @@ export const ManageLocationTemplate = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.key}</a>
-          <a>Chỉnh sửa</a>
-          <a>Xóa</a>
+          <Button
+            onClick={() => {
+              dispatch(getLocationIdThunk(record.id))
+                .unwrap()
+                .then(() => {
+                  setIsModal2Open(true);
+                })
+                .catch(() => {
+                  console.log("Có lỗi");
+                });
+            }}
+          >
+            Chỉnh sửa
+          </Button>
+          <Button onClick={async() => {
+            try {
+              await locationServices.deleteLocationId(record.id)
+              await dispatch(locationActions.deleteLocation(record.id))
+              toast.success('Xóa thành công')
+            } catch (error) {
+              handleError(error, 'Xóa thất bại')
+            }
+          }}>Xóa</Button>
         </Space>
       ),
     },
@@ -88,7 +120,7 @@ export const ManageLocationTemplate = () => {
 
   const data: DataType[] = listLocation?.map((location) => {
     return {
-      key: location.id,
+      id: location.id,
       hinhAnh: location.hinhAnh,
       tenViTri: location.tenViTri,
       tinhThanh: location.tinhThanh,
@@ -97,40 +129,39 @@ export const ManageLocationTemplate = () => {
   });
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
-  // const [isModal2Open, setIsModal2Open] = useState(false);
+  const [isModal2Open, setIsModal2Open] = useState(false);
 
   useEffect(() => {
     dispatch(getListLocationThunk());
   }, [dispatch]);
+
+  useEffect(() => {
+    reset(location);
+  }, [location, reset]);
   return (
     <div>
-      ManageLocationTemplate
-      {/* Button QTV+ */}
+      {/* Button VịTrí+ */}
       <div className="m-5">
         <Button type="primary" onClick={() => setIsModal1Open(true)}>
           Thêm vị trí
         </Button>
       </div>
-      {/* Modal QTV+*/}
+      {/* Modal VịTrí*/}
       <Modal
-        title="Thêm quản trị viên"
+        title="Thêm Vị Trí"
         open={isModal1Open}
         onCancel={() => {
           setIsModal1Open(false);
-          reset();
+          reset({
+            'hinhAnh': '',
+            'quocGia': '',
+            'tenViTri': '',
+            'tinhThanh': ''
+          });
         }}
         footer={null}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="ID"
-            name="id"
-            placeholder="Nhập id"
-            type="text"
-            className="mt-6 p-[10px] border-red-400 border ml-5 rounded-6"
-            register={register}
-            errors={errors?.id?.message}
-          />
           <Input
             label="Vị trí"
             name="tenViTri"
@@ -172,6 +203,64 @@ export const ManageLocationTemplate = () => {
               Đăng Ký
             </Button>
           </div>
+        </form>
+      </Modal>
+      {/* Modal Thông tin vị trí */}
+      <Modal
+        title="Thông tin vị trí"
+        open={isModal2Open}
+        onCancel={() => {
+          setIsModal2Open(false);
+          reset({
+            'hinhAnh': '',
+            'quocGia': '',
+            'tenViTri': '',
+            'tinhThanh': ''
+          });
+        }}
+        onOk={() => {
+          setIsModal2Open(false);
+        }}
+        okText="Cập Nhật"
+        cancelText="Hủy"
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <div>
+            <OkBtn />
+            <CancelBtn />
+          </div>
+        )}
+      >
+        <form className="my-5" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="ID"
+            name="id"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white disabled:"
+            register={register}
+          />
+          <Input
+            label="Tên vị trí"
+            name="tenViTri"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Tỉnh thành"
+            name="tinhThanh"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Quốc gia"
+            name="quocGia"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
+          <Input
+            label="Hình ảnh"
+            name="hinhAnh"
+            className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
+            register={register}
+          />
         </form>
       </Modal>
       {/* Show UI listLocation */}

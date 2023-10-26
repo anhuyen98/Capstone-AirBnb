@@ -1,11 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit'
 import { userServices } from 'services'
+import { getTokenUser } from 'utils'
 
 export const getUserByIdThunk = createAsyncThunk(
     'user/getUserById', async(path: number,{rejectWithValue}) => {
         try {
-            const data = await userServices.getUserById(path)
-            return data.data.content
+            const token = getTokenUser()
+            if (token) {
+                const data = await userServices.getUserById(path)
+                return data.data.content
+            }
 
         } catch (error) {
             return rejectWithValue(error)
@@ -47,3 +51,13 @@ export const updateUserThunk = createAsyncThunk(
         }
     }
 )
+
+// export const getTokenUserThunk = createAsyncThunk(
+//     'auth/getTokenUser', async(_, {rejectWithValue}) => {
+//         try {
+//             const data = await 
+//         } catch (error) {
+//             return rejectWithValue(error)
+//         }
+//     }
+// )
