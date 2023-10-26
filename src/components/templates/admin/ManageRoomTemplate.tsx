@@ -6,6 +6,7 @@ import {
   getListRoomThunk,
   getRoomByIdThunk,
   postRoomThunk,
+  updateRoomByIdThunk,
 } from "store/room";
 import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -15,8 +16,9 @@ import { RoomSchema, RoomSchemaType } from "schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError } from "utils";
 import { toast } from "react-toastify";
+import { useQueryUrl } from "hooks";
 export const ManageRoomTemplate = () => {
-  console.log('Render')
+  const [queryUrl, setQueryUrl] = useQueryUrl()
   const { listRoom, room } = useSelector((state: RootState) => state.room);
   const {
     handleSubmit,
@@ -30,11 +32,43 @@ export const ManageRoomTemplate = () => {
   const onSubmit: SubmitHandler<RoomSchemaType> = async (value) => {
     try {
       await dispatch(postRoomThunk(value));
+      reset({
+        id: 0,
+        tenPhong: '',
+        moTa: '',
+        khach: 0,
+        giaTien: 0,
+        hinhAnh: ''
+      })
       toast.success("Thêm phòng thành công");
     } catch (error) {
       handleError(error);
     }
   };
+  const onUpdate: SubmitHandler<RoomSchemaType> = async (value) => {
+    try {
+      console.log(value)
+      const payload = {
+        id: Number(queryUrl.id),
+        dataPayLoad: {
+          ...value,
+          id: Number(queryUrl.id)
+        }
+      }
+      await dispatch(updateRoomByIdThunk(payload))
+      reset({
+        id: 0,
+        tenPhong: '',
+        moTa: '',
+        khach: 0,
+        giaTien: 0,
+        hinhAnh: ''
+      })
+      toast.success('Cập nhật thành công')
+    } catch (error) {
+      handleError(error)
+    }
+  }
   const onError: SubmitErrorHandler<RoomSchemaType> = (value) => {
     console.log(value);
   };
@@ -78,7 +112,6 @@ export const ManageRoomTemplate = () => {
       key: "khach",
       render: (text) => <p>{text} người</p>,
     },
-
     {
       title: "Hành động",
       key: "action",
@@ -86,6 +119,9 @@ export const ManageRoomTemplate = () => {
         <Space size="middle">
           <Button
             onClick={() => {
+              setQueryUrl({
+                id: String(record.id) || undefined
+              })
               dispatch(getRoomByIdThunk(record.id))
                 .unwrap()
                 .then(() => {
@@ -148,6 +184,14 @@ export const ManageRoomTemplate = () => {
         title="Thêm Phòng"
         open={isModal1Open}
         onCancel={() => {
+          reset({
+            id: 0,
+            tenPhong: '',
+            moTa: '',
+            khach: 0,
+            giaTien: 0,
+            hinhAnh: ''
+          })
           setIsModal1Open(false);
         }}
         footer={null}
@@ -219,12 +263,24 @@ export const ManageRoomTemplate = () => {
         title="Thông tin vị trí"
         open={isModal2Open}
         onCancel={() => {
-          setIsModal2Open(false);
-        }}
-        onOk={() => {
+          setQueryUrl({
+            id: undefined
+          })
+          reset({
+            id: 0,
+            tenPhong: '',
+            moTa: '',
+            khach: 0,
+            giaTien: 0,
+            hinhAnh: ''
+          })
           setIsModal2Open(false);
         }}
         okText="Cập Nhật"
+        okButtonProps={{
+          htmlType: "submit",
+          form: 'updateForm'
+        }}
         cancelText="Hủy"
         footer={(_, { OkBtn, CancelBtn }) => (
           <div>
@@ -233,42 +289,48 @@ export const ManageRoomTemplate = () => {
           </div>
         )}
       >
-        <form className="my-5" onSubmit={handleSubmit(onSubmit)}>
+        <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate)}>
           <Input
             label="ID"
             name="id"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white disabled:"
             register={register}
+            errors={errors?.id?.message}
           />
           <Input
             label="Tên phòng"
             name="tenPhong"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.tenPhong?.message}
           />
           <Input
             label="Mô tả"
             name="moTa"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.moTa?.message}
           />
           <Input
             label="Giá tiền"
             name="giaTien"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.giaTien?.message}
           />
           <Input
             label="Số lượng khách"
             name="khach"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.khach?.message}
           />
           <Input
             label="Hình ảnh"
             name="hinhAnh"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.hinhAnh?.message}
           />
         </form>
       </Modal>

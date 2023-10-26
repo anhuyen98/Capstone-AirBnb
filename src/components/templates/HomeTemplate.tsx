@@ -21,16 +21,16 @@ export const HomeTemplate = () => {
         <div className="grid grid-cols-4 content">
           {
             listLocation?.map((vitri) => (
-              <Card
+              <div key={vitri.id}>
+                <Card
                 style={{ width: "80%" }}
                 className="!mt-5 flex justify-center"
                 title={vitri.tenViTri}
                 cover={<img src={vitri.hinhAnh} alt="slide" />}
                 // title={vitri.tenViTri}
                 bordered={false}
-              >
-
-              </Card>
+              />
+              </div>
 
             ))
           }

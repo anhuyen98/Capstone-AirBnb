@@ -46,3 +46,16 @@ export const deleteBookingByIdThunk = createAsyncThunk(
         }
     }
 )
+
+export const updateBookingByIdThunk = createAsyncThunk(
+    'booking/updateBookingById', async(payload: { id: number, dataPayLoad: BookingSchemaType}, {rejectWithValue, dispatch}) => {
+        try {
+            const {id, dataPayLoad} = payload
+            const data = await bookingServices.updateBookingById(id, dataPayLoad)
+            dispatch(getListBookingThunk())
+            return data.data.content
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)

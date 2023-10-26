@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getListLocationThunk, getLocationIdThunk } from ".";
+import { createSlice } from "@reduxjs/toolkit";
+import { getListLocationThunk, getLocationIdThunk, updateLocationByIdThunk } from ".";
 import { LocationType } from "types";
 
 type locationInitialState = {
@@ -13,12 +13,6 @@ const locationSlice = createSlice({
   name: "location",
   initialState,
   reducers: {
-    addLocation: (state, { payload }: PayloadAction<LocationType>) => {
-      state.listLocation.push(payload);
-    },
-    deleteLocation: (state, {payload}: PayloadAction<number>) => {
-      state.listLocation = state.listLocation.filter((location) => location.id !== payload)
-    }
   },
   extraReducers(builder) {
     builder
@@ -27,7 +21,13 @@ const locationSlice = createSlice({
       })
       .addCase(getLocationIdThunk.fulfilled, (state, { payload }) => {
         state.location = payload;
-      });
+      })
+      .addCase(updateLocationByIdThunk.fulfilled, (state, {payload}) => {
+        state.listLocation.map((location) => {
+          if (location.id === payload.id) return payload
+          return location
+        })
+      })
   },
 });
 

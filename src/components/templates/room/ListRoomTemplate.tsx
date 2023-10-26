@@ -15,7 +15,6 @@ export const ListRoomTemplate = () => {
   },[dispatch, params])
   return (
     <div className="grid grid-cols-12">
-        
       {
         listRoomByLocal?.map((room) => {
           return (
@@ -28,12 +27,6 @@ export const ListRoomTemplate = () => {
                 <Meta className="text-ellipsis" title={room.tenPhong} description={room.moTa.substring(0, 150)} />
               </Card>
             </div>
-            // <div key={}>
-            //   <p>{room.tenPhong}</p>
-            //   <img src={room.hinhAnh} alt="" width='500px'/>
-            //   <p>{room.giaTien}</p>
-            //   <p>{room.moTa}</p>
-            // </div>
           )
         })
       }
