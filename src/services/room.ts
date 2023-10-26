@@ -11,5 +11,6 @@ export const roomServices = {
     getListRoomByLocal: (mvt: number) => api.get<ApiResponse<RoomType[]>>(`/lay-phong-theo-vi-tri?maViTri=${mvt}`),
     postRoom: (data: RoomSchemaType) => api.post<ApiResponse<RoomType>>('',data),
     getRoomById: (id: number) => api.get<ApiResponse<RoomType>>(`/${id}`),
-    deleteRoomById: (id: number) => api.delete<ApiResponse<RoomType>>(`/${id}`) 
+    deleteRoomById: (id: number) => api.delete<ApiResponse<null>>(`/${id}`), 
+    updateRoomById: (id: number, data: RoomSchemaType) => api.put<ApiResponse<RoomType>>(`/${id}`, data)
 }

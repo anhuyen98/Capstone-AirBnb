@@ -6,6 +6,7 @@ import {
   getBookingByIdThunk,
   getListBookingThunk,
   postBookingThunk,
+  updateBookingByIdThunk,
 } from "store/booking";
 import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -16,10 +17,12 @@ import { BookingSchema, BookingSchemaType } from "schema/BookingSchema";
 import { handleError } from "utils";
 import { toast } from "react-toastify";
 import { fomatDay } from "utils/fomatDay";
+import { useQueryUrl } from "hooks";
 export const ManageBookingTemplate = () => {
   const { listBooking, booking } = useSelector(
     (state: RootState) => state.booking
   );
+  const [queryUrl, setQueryUrl] = useQueryUrl()
   const {
     handleSubmit,
     register,
@@ -29,11 +32,10 @@ export const ManageBookingTemplate = () => {
     mode: "onChange",
     resolver: zodResolver(BookingSchema),
   });
-
   const onSubmit: SubmitHandler<BookingSchemaType> = async (value) => {
     try {
       console.log(value);
-      dispatch(postBookingThunk(value));
+      await dispatch(postBookingThunk(value));
       reset({
         id: 0,
         maPhong: 0,
@@ -46,6 +48,28 @@ export const ManageBookingTemplate = () => {
       handleError(error, "Đặt phòng thất bại");
     }
   };
+  const onUpdate: SubmitHandler<BookingSchemaType> = async (value) => {
+    try {
+      const payload = {
+        id: Number(queryUrl.id),
+        dataPayLoad: {
+          ...value,
+          id: Number(queryUrl.id)
+        }
+      }
+      await dispatch(updateBookingByIdThunk(payload))
+      reset({
+        id: 0,
+        maPhong: 0,
+        ngayDen: new Date(),
+        ngayDi: new Date(),
+        soLuongKhach: 0,
+      });
+      toast.success('Cập nhật thành công')
+    } catch (error) {
+      handleError(error)
+    }
+  }
   const onError: SubmitErrorHandler<BookingSchemaType> = (value) => {
     console.log(value);
   };
@@ -89,7 +113,6 @@ export const ManageBookingTemplate = () => {
       key: "soLuongKhach",
       render: (text) => <p>{text} người</p>,
     },
-
     {
       title: "Hành động",
       key: "action",
@@ -97,6 +120,9 @@ export const ManageBookingTemplate = () => {
         <Space size="middle">
           <Button
             onClick={() => {
+              setQueryUrl({
+                id: String(record.id) || undefined
+              })
               dispatch(getBookingByIdThunk(record.id))
                 .unwrap()
                 .then(() => {
@@ -226,12 +252,23 @@ export const ManageBookingTemplate = () => {
         title="Thông tin vị trí"
         open={isModal2Open}
         onCancel={() => {
-          setIsModal2Open(false);
-        }}
-        onOk={() => {
+          setQueryUrl({
+            id: undefined
+          })
+          reset({
+            id: 0,
+            maPhong: 0,
+            ngayDen: new Date(),
+            ngayDi: new Date(),
+            soLuongKhach: 0,
+          });
           setIsModal2Open(false);
         }}
         okText="Cập Nhật"
+        okButtonProps={{
+          htmlType: "submit",
+          form: 'updateForm'
+        }}
         cancelText="Hủy"
         footer={(_, { OkBtn, CancelBtn }) => (
           <div>
@@ -240,36 +277,41 @@ export const ManageBookingTemplate = () => {
           </div>
         )}
       >
-        <form className="my-5" onSubmit={handleSubmit(onSubmit)}>
+        <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate)}>
           <Input
             label="ID"
             name="id"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white disabled:"
             register={register}
+            errors={errors?.id?.message}
           />
           <Input
             label="Mã phòng"
             name="maPhong"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.maPhong?.message}
           />
           <Input
             label="Ngày đến"
             name="ngayDen"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.ngayDen?.message}
           />
           <Input
             label="Ngày đi"
             name="ngayDi"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.ngayDi?.message}
           />
           <Input
             label="Số lượng khách"
             name="soLuongKhach"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.soLuongKhach?.message}
           />
         </form>
       </Modal>

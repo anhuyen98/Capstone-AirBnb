@@ -3,9 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
 import {
+  deleteLocationByIdThunk,
   getListLocationThunk,
   getLocationIdThunk,
-  locationActions,
+  postLocationThunk,
+  updateLocationByIdThunk,
 } from "store/location";
 import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -14,11 +16,12 @@ import { toast } from "react-toastify";
 import { handleError } from "utils";
 import { Button, Input } from "components";
 import { LocationSchema, LocationSchemaType } from "schema/LocationSchema";
-import { locationServices } from "services";
+import { useQueryUrl } from "hooks";
 export const ManageLocationTemplate = () => {
   const { listLocation, location } = useSelector(
     (state: RootState) => state.location
   );
+  const [queryUrl, setQueryUrl] = useQueryUrl()
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -31,19 +34,39 @@ export const ManageLocationTemplate = () => {
   });
   const onSubmit: SubmitHandler<LocationSchemaType> = async (value) => {
     try {
-      await locationServices.postLocation(value);
-      dispatch(locationActions.addLocation(value));
+      await dispatch(postLocationThunk(value));
       reset({
-        'hinhAnh': '',
-        'quocGia': '',
-        'tenViTri': '',
-        'tinhThanh': ''
+        hinhAnh: "",
+        quocGia: "",
+        tenViTri: "",
+        tinhThanh: "",
       });
       toast.success("Thêm mới thành công");
     } catch (error) {
       handleError(error, "Thêm mới thất bại");
     }
   };
+  const onUpdate: SubmitHandler<LocationSchemaType> = async (value) => {
+    try {
+      const payload = {
+        id: Number(queryUrl.id),
+        dataPayLoad: {
+          ...value,
+          id: Number(queryUrl.id)
+        }
+      }
+      await dispatch(updateLocationByIdThunk(payload))
+      reset({
+        hinhAnh: "",
+        quocGia: "",
+        tenViTri: "",
+        tinhThanh: "",
+      });
+      toast.success('Cập nhật thành công')
+    } catch (error) {
+      handleError(error)
+    }
+  }
   // Table
   type DataType = {
     id?: number;
@@ -84,7 +107,6 @@ export const ManageLocationTemplate = () => {
       key: "quocGia",
       render: (text) => <p>{text}</p>,
     },
-
     {
       title: "Hành động",
       key: "action",
@@ -92,6 +114,9 @@ export const ManageLocationTemplate = () => {
         <Space size="middle">
           <Button
             onClick={() => {
+              setQueryUrl({
+                id: String(record.id) || undefined
+              })
               dispatch(getLocationIdThunk(record.id))
                 .unwrap()
                 .then(() => {
@@ -104,15 +129,20 @@ export const ManageLocationTemplate = () => {
           >
             Chỉnh sửa
           </Button>
-          <Button onClick={async() => {
-            try {
-              await locationServices.deleteLocationId(record.id)
-              await dispatch(locationActions.deleteLocation(record.id))
-              toast.success('Xóa thành công')
-            } catch (error) {
-              handleError(error, 'Xóa thất bại')
-            }
-          }}>Xóa</Button>
+          <Button
+            onClick={() => {
+              dispatch(deleteLocationByIdThunk(record.id))
+                .unwrap()
+                .then(() => {
+                  toast.success("Xóa thành công");
+                })
+                .catch((error) => {
+                  handleError(error, "Xóa thất bại");
+                });
+            }}
+          >
+            Xóa
+          </Button>
         </Space>
       ),
     },
@@ -153,10 +183,10 @@ export const ManageLocationTemplate = () => {
         onCancel={() => {
           setIsModal1Open(false);
           reset({
-            'hinhAnh': '',
-            'quocGia': '',
-            'tenViTri': '',
-            'tinhThanh': ''
+            hinhAnh: "",
+            quocGia: "",
+            tenViTri: "",
+            tinhThanh: "",
           });
         }}
         footer={null}
@@ -210,16 +240,20 @@ export const ManageLocationTemplate = () => {
         title="Thông tin vị trí"
         open={isModal2Open}
         onCancel={() => {
+          setQueryUrl({
+            id: undefined
+          })
           setIsModal2Open(false);
           reset({
-            'hinhAnh': '',
-            'quocGia': '',
-            'tenViTri': '',
-            'tinhThanh': ''
+            hinhAnh: "",
+            quocGia: "",
+            tenViTri: "",
+            tinhThanh: "",
           });
         }}
-        onOk={() => {
-          setIsModal2Open(false);
+        okButtonProps={{
+          htmlType: "submit",
+          form: 'updateForm'
         }}
         okText="Cập Nhật"
         cancelText="Hủy"
@@ -230,7 +264,7 @@ export const ManageLocationTemplate = () => {
           </div>
         )}
       >
-        <form className="my-5" onSubmit={handleSubmit(onSubmit)}>
+        <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate)}>
           <Input
             label="ID"
             name="id"
@@ -242,24 +276,28 @@ export const ManageLocationTemplate = () => {
             name="tenViTri"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
-          />
+            errors={errors?.tenViTri?.message}
+          />            
           <Input
             label="Tỉnh thành"
             name="tinhThanh"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.tinhThanh?.message}
           />
           <Input
             label="Quốc gia"
             name="quocGia"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.quocGia?.message}
           />
           <Input
             label="Hình ảnh"
             name="hinhAnh"
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
+            errors={errors?.hinhAnh?.message}
           />
         </form>
       </Modal>

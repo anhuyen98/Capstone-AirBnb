@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { BookingType } from "types";
-import { getBookingByIdThunk, getListBookingThunk } from ".";
+import { getBookingByIdThunk, getListBookingThunk, updateBookingByIdThunk } from ".";
 
 type BookingInitialState = {
   listBooking?: BookingType[];
@@ -18,7 +18,13 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookingByIdThunk.fulfilled, (state, { payload }) => {
         state.booking = payload;
-      });
+      })
+      .addCase(updateBookingByIdThunk.fulfilled, (state, {payload}) => {
+        state.listBooking.map((booking) => {
+          if (booking.id === payload.id) return payload
+          return booking
+        })
+      })
   },
 });
 

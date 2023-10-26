@@ -4,27 +4,25 @@ import { useSelector } from "react-redux";
 import cn from "classnames";
 import { RootState, useAppDispatch } from "store";
 import {
-  deleteUserThunk,
+  deleteUserByIdThunk,
   getListUserThunk,
   getUserByIdThunk,
-  updateUserThunk,
+  postUserThunk,
+  updateUserByIdThunk,
   userActions,
 } from "store/user";
 import { Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { toast } from "react-toastify";
 import styled from "styled-components";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { RegisterSchema, RegisterSchemaType } from "schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError } from "utils";
-import { userServices } from "services";
 import { useQueryUrl } from "hooks";
 export const ManageUserTemplate = () => {
   const dispatch = useAppDispatch();
   const [queryUrl, setQueryUrl] = useQueryUrl()
-  console.log("queryUrl: ", queryUrl);
-  console.log('RE-RENDER')
   const { listUser, user, isEditing } = useSelector(
     (state: RootState) => state.user
   );
@@ -39,8 +37,16 @@ export const ManageUserTemplate = () => {
   });
   const onSubmit: SubmitHandler<RegisterSchemaType> = async (value) => {
     try {
-      await userServices.postUser(value);
-      reset();
+      await dispatch(postUserThunk(value));
+      reset({
+        name: '',
+        birthday: '',
+        email: '',
+        gender: false,
+        password: '',
+        phone: '',
+        role: ''
+      });
       toast.success("Bạn đã đăng ký thành công");
     } catch (error) {
       handleError(error, "Đăng ký thất bại");
@@ -48,26 +54,30 @@ export const ManageUserTemplate = () => {
   };
   const onUpdate: SubmitHandler<RegisterSchemaType> = async(value) => {
     try {
-      console.log(value)
       const payload = {
         id: Number(queryUrl.id),
-        dataPayLoad: value
+        dataPayLoad: {
+          ...value,
+          id: Number(queryUrl.id)
+        }
       }
-      console.log("payload: ", payload);
-      await dispatch(updateUserThunk(payload))
+      await dispatch(updateUserByIdThunk(payload))
       reset({
-        'name': '',
-        'birthday': '',
-        'email': '',
-        'gender': false,
-        'password': '',
-        'phone': '',
-        'role': ''
+        name: '',
+        birthday: '',
+        email: '',
+        gender: false,
+        password: '',
+        phone: '',
+        role: ''
       });
       toast.success('Cập nhật thành công')
     } catch (error) {
-      handleError(error, 'Cập nhật thất bại')
+      handleError(error)
     }
+  }
+  const onError: SubmitErrorHandler<RegisterSchemaType> = async(value) => {
+    console.log(value)
   }
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
@@ -114,7 +124,6 @@ export const ManageUserTemplate = () => {
       key: "role",
       render: (text) => <p>{text}</p>,
     },
-
     {
       title: "Hành động",
       key: "action",
@@ -136,14 +145,13 @@ export const ManageUserTemplate = () => {
           </Button>
           <Button
             onClick={() => {
-              dispatch(deleteUserThunk(record.key))
+              dispatch(deleteUserByIdThunk(record.key))
                 .unwrap()
                 .then(() => {
-                  dispatch(userActions.deleteItemListUser(record.key));
                   toast.success("Xóa thành công");
                 })
-                .catch(() => {
-                  toast.error("Đã xảy ra lỗi, không thể xóa");
+                .catch((error) => {
+                  handleError(error)
                 });
             }}
           >
@@ -190,13 +198,13 @@ export const ManageUserTemplate = () => {
         onCancel={() => {
           setIsModal1Open(false);
           reset({
-            'name': '',
-            'birthday': '',
-            'email': '',
-            'gender': false,
-            'password': '',
-            'phone': '',
-            'role': ''
+            name: '',
+            birthday: '',
+            email: '',
+            gender: false,
+            password: '',
+            phone: '',
+            role: ''
           });
         }}
         footer={null}
@@ -280,18 +288,23 @@ export const ManageUserTemplate = () => {
           })
           setIsModal2Open(false);
           reset({
-            'name': '',
-            'birthday': '',
-            'email': '',
-            'gender': false,
-            'password': '',
-            'phone': '',
-            'role': ''
+            name: '',
+            birthday: '',
+            email: '',
+            gender: false,
+            password: '',
+            phone: '',
+            role: ''
           });
           dispatch(userActions.cancelEditing());
         }}
+        okText="Cập Nhật"
+        okButtonProps={{
+          htmlType: "submit",
+          form: 'updateForm'
+        }}
         cancelText="Hủy"
-        footer={(_, { CancelBtn }) => (
+        footer={(_, { OkBtn,CancelBtn }) => (
           <div>
             <Button
               onClick={() => {
@@ -300,17 +313,18 @@ export const ManageUserTemplate = () => {
             >
               Chỉnh sửa
             </Button>
-            
+            <OkBtn />
             <CancelBtn />
           </div>
         )}
       >
         <ContainerForm>
-          <form className="my-5" onSubmit={handleSubmit(onUpdate)}>
+          <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate, onError)}>
             <Input
               label="ID"
               name="id"
               className="my-[15px] mx-5 py-3 px-4 pointer-events-none"
+              register={register}
             />
             <Input
             type="text"
@@ -334,6 +348,16 @@ export const ManageUserTemplate = () => {
             />
             <Input
             type="text"
+              label="Số điện thoại"
+              name="phone"
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
+                isEditing: isEditing,
+              })}
+              register={register}
+              errors={errors?.phone?.message}
+            />
+            <Input
+            type="text"
               label="Tên"
               name="name"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -341,6 +365,16 @@ export const ManageUserTemplate = () => {
               })}
               register={register}
               errors={errors?.name?.message}
+            />
+            <Input
+            type="text"
+              label="Mật khẩu"
+              name="password"
+              className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
+                isEditing: isEditing,
+              })}
+              register={register}
+              errors={errors?.password?.message}
             />
             <Input
             type="text"
@@ -352,7 +386,7 @@ export const ManageUserTemplate = () => {
               register={register}
               errors={errors?.role?.message}
             />
-            <Button htmlType="submit">Cập nhật nè</Button>
+            {/* <Button htmlType="submit">Cập nhật nè</Button> */}
           </form>
         </ContainerForm>
       </Modal>

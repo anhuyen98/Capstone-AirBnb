@@ -58,3 +58,16 @@ export const deleteRoomByIdThunk = createAsyncThunk(
         }
     }
 )
+
+export const updateRoomByIdThunk = createAsyncThunk(
+    'room/updateRoomById', async(payload: { id: number, dataPayLoad: RoomSchemaType}, {rejectWithValue, dispatch}) => {
+        try {
+            const {id, dataPayLoad} = payload
+            const data = await roomServices.updateRoomById(id, dataPayLoad)
+            dispatch(getListRoomThunk())
+            return data.data.content
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)

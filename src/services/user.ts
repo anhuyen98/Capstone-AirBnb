@@ -9,7 +9,7 @@ const api = apiInstance({
 export const userServices = {
     getUserById: (path: number) => api.get<ApiResponse<UserLogin>>(`/${path}`),
     getListUser: () => api.get<ApiResponse<UserLogin[]>>(''),
-    deleteUser: (id: number) => api.delete<ApiResponse<null>>(`?id=${id}`),
+    deleteUserById: (id: number) => api.delete<ApiResponse<null>>(`?id=${id}`),
     postUser: (data: RegisterSchemaType) => api.post('', data),
-    putUser: (path: number, data: UserLogin) => api.put<ApiResponse<UserLogin>>(`/${path}`, data)
+    updateUserById: (path: number, data: UserLogin) => api.put<ApiResponse<UserLogin>>(`/${path}`, data)
 }
