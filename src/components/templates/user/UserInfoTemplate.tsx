@@ -10,7 +10,7 @@ export const UserInfoTemplate = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getUserByIdThunk(Number(params.userId)))
-  },[dispatch, params])
+  }, [dispatch, params])
   return (
     <div>
       <h1>UserInfoTemplate</h1>
@@ -22,6 +22,7 @@ export const UserInfoTemplate = () => {
         <p>{user?.phone}</p>
         <p>{user?.role}</p>
       </div>
+
     </div>
   );
 };

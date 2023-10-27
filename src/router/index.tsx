@@ -2,6 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { PATH } from "constant";
 import { AdminLayout, AuthLayout, MainLayouts, ManageBookingTemplate, ManageLocationTemplate, ManageRoomTemplate, ManageUserTemplate, RoomDetailTemplate } from "components";
 import { Home, Login, Register, Room, User } from "pages";
+import { Booking } from "pages/Booking";
 
 export const router: RouteObject[] = [
     {
@@ -36,6 +37,10 @@ export const router: RouteObject[] = [
             {
                 element: <User />,
                 path: PATH.userDetail,
+            },
+            {
+                element: <Booking />,
+                path: PATH.bookingDetail,
             },
             
         ]

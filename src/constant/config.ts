@@ -9,4 +9,5 @@ export const PATH = {
     userDetail: '/user/:userId',
     room: '/room/:roomLocalId',
     roomDetail: 'roomDetail',
+    bookingDetail: '/booking/:bookingById',
 }
