@@ -6,6 +6,7 @@ type UserInitialState = {
   user?: UserLogin;
   listUser?: UserLogin[];
   isEditing?: boolean;
+  error?: string
 };
 
 const initialState: UserInitialState = {};
@@ -19,6 +20,9 @@ const userSlice = createSlice({
     },
     cancelEditing: (state) => {
       state.isEditing = false;
+    },
+    uploadAva: (state, {payload}) => {
+      state.user = payload
     },
   },
   extraReducers(builder) {
@@ -34,7 +38,10 @@ const userSlice = createSlice({
           if (user.id === payload.id) return payload;
           return user;
         });
-      });
+      })
+      .addCase(updateUserByIdThunk.rejected, (state, { error }) => {
+        state.error = error.message
+      })
   },
 });
 

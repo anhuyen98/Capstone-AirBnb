@@ -21,8 +21,6 @@ export const AdminLayout = () => {
   } = theme.useToken();
   return (
     <div>
-      <h1>AdminLayout</h1>
-
       <Layout>
         <Sider
           trigger={null}
