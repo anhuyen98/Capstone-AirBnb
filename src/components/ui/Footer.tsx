@@ -4,31 +4,7 @@ import styled from 'styled-components'
 export const Footer = () => {
   return (
     <Container className="mt-[100px] footer">
-      <div className="footer-img">
-        <p className="font-700 text-20 ml-[120px]">
-          <span>Ở bất cứ đâu</span>
-        </p>
-        <div>
-          <div className='mt-[20px] mb-[40px] flex justify-center gap-[20px]'>
-            <div>
-              <img src="https://smarthome.worldtech.vn/wp-content/uploads/2017/10/cac-mau-nha-vuon-dep-1024x716.jpg" alt="hinh-1" style={{ width: '300px', height: '250px', borderRadius: '10px' }} />
-              <span>Toàn bộ nhà</span>
-            </div>
-            <div>
-              <img src="https://smarthome.worldtech.vn/wp-content/uploads/2017/10/mau-hinh-anh-ngoi-nha-dep-1024x576.jpg" alt="hinh-2" style={{ width: '300px', height: '250px', borderRadius: '10px' }} />
-              <span>Chỗ ở độc đáo</span>
-            </div>
-            <div>
-              <img src="https://afamilycdn.com/2020/1/9/3-15785810130461716361236.jpg" alt="hinh-3" style={{ width: '300px', height: '250px', borderRadius: '10px' }} />
-              <span>Trang trại và thiên nhiên</span>
-            </div>
-            <div>
-              <img src="https://braincare.vn/wp-content/uploads/2021/10/nuoi-thu-cung.jpg" alt="hinh-4" style={{ width: '300px', height: '250px', borderRadius: '10px' }} />
-              <span>Cho phép mang theo thú cưng</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      
       <hr />
       <div className="footer-content">
         <div className="mt-[40px] flex justify-center gap-[110px] info">
