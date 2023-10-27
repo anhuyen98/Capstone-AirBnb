@@ -29,7 +29,6 @@ export const HomeTemplate = () => {
                 className="!mt-5 flex justify-center"
                 title={vitri.tenViTri}
                 cover={<img src={vitri.hinhAnh} alt="slide" />}
-                // title={vitri.tenViTri}
                 bordered={false}
               />
               </div>

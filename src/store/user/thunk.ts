@@ -59,6 +59,7 @@ export const updateUserByIdThunk = createAsyncThunk(
             const {id, dataPayLoad} = payload 
             const data = await userServices.updateUserById(id, dataPayLoad)
             dispatch(getListUserThunk())
+            dispatch(getUserByIdThunk(id))
             return data.data.content
         } catch (error) {
             return rejectWithValue(error)

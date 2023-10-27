@@ -11,5 +11,6 @@ export const userServices = {
     getListUser: () => api.get<ApiResponse<UserLogin[]>>(''),
     deleteUserById: (id: number) => api.delete<ApiResponse<null>>(`?id=${id}`),
     postUser: (data: RegisterSchemaType) => api.post('', data),
-    updateUserById: (path: number, data: UserLogin) => api.put<ApiResponse<UserLogin>>(`/${path}`, data)
+    updateUserById: (path: number, data: UserLogin) => api.put<ApiResponse<UserLogin>>(`/${path}`, data),
+    uploadAvatar: (data: FormData) => api.post<ApiResponse<UserLogin>>('/upload-avatar', data)
 }
