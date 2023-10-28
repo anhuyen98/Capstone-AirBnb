@@ -25,6 +25,7 @@ export const HomeTemplate = () => {
             listLocation?.map((vitri) => (
               <div>
                 <Card
+                hoverable
                 style={{ width: "80%" }}
                 className="!mt-5 flex justify-center"
                 title={vitri.tenViTri}
