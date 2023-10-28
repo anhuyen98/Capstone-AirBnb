@@ -284,7 +284,7 @@ export const UserInfoTemplate = () => {
           </Modal>
         </div>
       </div>
-    </div>
+    </ContainerUserInfo>
   );
 };
 
