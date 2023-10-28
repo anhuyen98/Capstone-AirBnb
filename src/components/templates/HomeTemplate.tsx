@@ -23,7 +23,7 @@ export const HomeTemplate = () => {
         <div className="grid grid-cols-4 content">
           {
             listLocation?.map((vitri) => (
-              <div key={vitri.id}>
+              <div>
                 <Card
                 style={{ width: "80%" }}
                 className="!mt-5 flex justify-center"

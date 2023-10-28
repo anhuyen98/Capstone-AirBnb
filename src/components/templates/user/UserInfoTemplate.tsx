@@ -83,8 +83,8 @@ export const UserInfoTemplate = () => {
     reset(user);
   }, [user, reset]);
   useEffect(() => {
-    dispatch(getUserByIdThunk(Number(params.userId)));
-  }, [dispatch, params]);
+    dispatch(getUserByIdThunk(Number(params.userId)))
+  },[dispatch, params])
   return (
     <ContainerUserInfo>
       <h1>UserInfoTemplate</h1>
@@ -284,7 +284,7 @@ export const UserInfoTemplate = () => {
           </Modal>
         </div>
       </div>
-    </ContainerUserInfo>
+    </div>
   );
 };
 
