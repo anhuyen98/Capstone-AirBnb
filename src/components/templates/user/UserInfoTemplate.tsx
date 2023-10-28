@@ -11,7 +11,7 @@ import { userServices } from "services";
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { RegisterSchema, RegisterSchemaType } from "schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleError } from "utils";
+import { handleError, sleep } from "utils";
 import { toast } from "react-toastify";
 export const UserInfoTemplate = () => {
   const { user } = useSelector((state: RootState) => state.user);
@@ -63,12 +63,15 @@ export const UserInfoTemplate = () => {
         },
       };
       await dispatch(updateUserByIdThunk(payload))
+        .unwrap()
         .then(() => {
           toast.success("Cập nhật thành công");
         })
         .catch((err) => {
           handleError(err);
         });
+      sleep(1000);
+      setIsModal2Open(false);
     } catch (error) {
       handleError(error);
     }

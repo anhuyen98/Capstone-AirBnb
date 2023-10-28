@@ -1,33 +1,42 @@
-// import { styled } from 'styled-components'
-import { NavLink } from 'react-router-dom'
-import { Input, Button, Avatar } from 'components'
-import styled from 'styled-components'
-
+import { NavLink } from "react-router-dom";
+import { Input, Button, Avatar, Popover } from "components";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "store";
+import { getUserByIdThunk } from "store/user";
+import { getIdUser } from "utils";
+import { useEffect } from "react";
 
 export const Header = () => {
+  const { user } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const id = getIdUser();
+    dispatch(getUserByIdThunk(Number(id)));
+  }, [dispatch]);
   return (
     <Container>
-      <div className='header-content'>
+      <div className="header-content">
         <div className="mb-[20px] flex justify-center items-center gap-[70px]">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
-            alt='horse'
-            width={100} />
+            alt="horse"
+            width={100}
+          />
           <div className="search">
             <Input />
-            <Button className='btn-text dir dir-ltr'>
+            <Button className="btn-text dir dir-ltr">
               <span>Địa điểm bất kỳ</span>
             </Button>
-            <Button className='btn-text dir dir-ltr'>
+            <Button className="btn-text dir dir-ltr">
               <span> Tuần bất kỳ </span>
             </Button>
-            <Button className='btn-text dir dir-ltr'>
+            <Button className="btn-text dir dir-ltr">
               <span>Thêm Khách</span>
             </Button>
-            <Button className='btn-search'>
+            <Button className="btn-search">
               <i className="fa-solid fa-magnifying-glass"></i>
             </Button>
-            
           </div>
           <div className="nav-right flex gap-[50px]">
             <nav className="nav-text">
@@ -40,62 +49,72 @@ export const Header = () => {
             </nav>
             <div className="avatar-info">
               {/* <i className="fa-solid fa-address-card"></i> */}
-              <Avatar size="large" >
-                <i className="fa-solid fa-bars"></i>
-                <i className="fa-regular fa-user text-20"></i>
-              </Avatar>
+              <Popover
+                content={
+                  <div className="flex flex-col items-center justify-between h-36">
+                    <img src={user?.avatar} alt="" width="100px" className="border border-dashed border-slate-600 rounded-10"/>
+                    <Button type="text" htmlType="button" danger className="my-10">Thông tin cá nhân</Button>
+                    <Button type="primary" danger>
+                    <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i><span className="ml-[5px] mr-10">Đăng xuất</span>
+                    </Button>
+                  </div>
+                }
+              >
+                <Avatar size="large">
+                  <i className="fa-solid fa-bars"></i>
+                  <i className="fa-regular fa-user text-20"></i>
+                </Avatar>
+              </Popover>
             </div>
           </div>
         </div>
       </div>
       <hr />
-    </Container >
-  )
-}
+    </Container>
+  );
+};
 
 const Container = styled.header`
   .header-content {
     max-width: var(--max-width);
     margin: auto;
     padding: 20px 40px;
-        
-  }      
+  }
   .search {
     display: flex;
     align-items: center;
     .btn-search {
-                height: 46px !important;
-                border: none;
-                border-radius: 50%;
-                background: red;
-                color: #fff;
-                margin-left: 20px;
-                &:hover {
-                    color: var(--primary-color) !important;
-                }
+      height: 46px !important;
+      border: none;
+      border-radius: 50%;
+      background: red;
+      color: #fff;
+      margin-left: 20px;
+      &:hover {
+        color: var(--primary-color) !important;
+      }
     }
     input {
-                background: transparent;
-                color: #111;
-                outline: none;
-                text-align: center;
+      background: transparent;
+      color: #111;
+      outline: none;
+      text-align: center;
     }
     .btn-text.dir {
-              background: transparent;
-              cursor: pointer;
-              padding: 0;
-              text-align: inherit;
-              border: none;             
-              margin-left: 20px;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      text-align: inherit;
+      border: none;
+      margin-left: 20px;
     }
     span {
-              font-size: large;
-              font-weight: 500;
+      font-size: large;
+      font-weight: 500;
     }
   }
   .nav-right {
     font-size: larger;
     font-weight: 500;
   }
-        
-`
+`;

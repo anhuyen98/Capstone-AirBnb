@@ -39,9 +39,6 @@ const userSlice = createSlice({
           return user;
         });
       })
-      .addCase(updateUserByIdThunk.rejected, (state, { error }) => {
-        state.error = error.message
-      })
   },
 });
 
