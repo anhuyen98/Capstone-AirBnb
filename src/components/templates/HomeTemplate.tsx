@@ -22,8 +22,8 @@ export const HomeTemplate = () => {
         </div>
         <div className="grid grid-cols-4 content">
           {
-            listLocation?.map((location) => (
-              <div>
+            listLocation?.map((vitri) => (
+              <div key={vitri.id}>
                 <Card
                 hoverable
                 style={{ width: "80%" }}

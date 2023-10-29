@@ -23,10 +23,8 @@ const locationSlice = createSlice({
         state.location = payload;
       })
       .addCase(updateLocationByIdThunk.fulfilled, (state, {payload}) => {
-        state.listLocation.map((location) => {
-          if (location.id === payload.id) return payload
-          return location
-        })
+        const index = state.listLocation.findIndex((location) => location.id === payload.id)
+        state.listLocation[index] = payload
       })
   },
 });

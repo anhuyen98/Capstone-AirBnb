@@ -21,7 +21,7 @@ export const ManageLocationTemplate = () => {
   const { listLocation, location } = useSelector(
     (state: RootState) => state.location
   );
-  const [queryUrl, setQueryUrl] = useQueryUrl()
+  const [queryUrl, setQueryUrl] = useQueryUrl();
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -52,21 +52,21 @@ export const ManageLocationTemplate = () => {
         id: Number(queryUrl.id),
         dataPayLoad: {
           ...value,
-          id: Number(queryUrl.id)
-        }
-      }
-      await dispatch(updateLocationByIdThunk(payload))
+          id: Number(queryUrl.id),
+        },
+      };
+      await dispatch(updateLocationByIdThunk(payload));
       reset({
         hinhAnh: "",
         quocGia: "",
         tenViTri: "",
         tinhThanh: "",
       });
-      toast.success('Cập nhật thành công')
+      toast.success("Cập nhật thành công");
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
+  };
   // Table
   type DataType = {
     id?: number;
@@ -115,8 +115,8 @@ export const ManageLocationTemplate = () => {
           <Button
             onClick={() => {
               setQueryUrl({
-                id: String(record.id) || undefined
-              })
+                id: String(record.id) || undefined,
+              });
               dispatch(getLocationIdThunk(record.id))
                 .unwrap()
                 .then(() => {
@@ -148,15 +148,13 @@ export const ManageLocationTemplate = () => {
     },
   ];
 
-  const data: DataType[] = listLocation?.map((location) => {
-    return {
-      id: location.id,
-      hinhAnh: location.hinhAnh,
-      tenViTri: location.tenViTri,
-      tinhThanh: location.tinhThanh,
-      quocGia: location.quocGia,
-    };
-  });
+  const data: DataType[] = listLocation?.map((location) => ({
+    id: location.id,
+    hinhAnh: location.hinhAnh,
+    tenViTri: location.tenViTri,
+    tinhThanh: location.tinhThanh,
+    quocGia: location.quocGia,
+  }));
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
@@ -241,8 +239,8 @@ export const ManageLocationTemplate = () => {
         open={isModal2Open}
         onCancel={() => {
           setQueryUrl({
-            id: undefined
-          })
+            id: undefined,
+          });
           setIsModal2Open(false);
           reset({
             hinhAnh: "",
@@ -253,7 +251,7 @@ export const ManageLocationTemplate = () => {
         }}
         okButtonProps={{
           htmlType: "submit",
-          form: 'updateForm'
+          form: "updateForm",
         }}
         okText="Cập Nhật"
         cancelText="Hủy"
@@ -264,7 +262,11 @@ export const ManageLocationTemplate = () => {
           </div>
         )}
       >
-        <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate)}>
+        <form
+          id="updateForm"
+          className="my-5"
+          onSubmit={handleSubmit(onUpdate)}
+        >
           <Input
             label="ID"
             name="id"
@@ -277,7 +279,7 @@ export const ManageLocationTemplate = () => {
             className="my-[15px] mx-5 py-3 px-4 bg-slate-400 text-white"
             register={register}
             errors={errors?.tenViTri?.message}
-          />            
+          />
           <Input
             label="Tỉnh thành"
             name="tinhThanh"
@@ -302,7 +304,7 @@ export const ManageLocationTemplate = () => {
         </form>
       </Modal>
       {/* Show UI listLocation */}
-      <Table columns={columns} dataSource={data} />
+      <Table rowKey={(record) => record.id} columns={columns} dataSource={data} />
     </div>
   );
 };

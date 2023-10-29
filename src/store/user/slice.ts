@@ -34,10 +34,8 @@ const userSlice = createSlice({
         state.listUser = payload;
       })
       .addCase(updateUserByIdThunk.fulfilled, (state, { payload }) => {
-        state.listUser.map((user) => {
-          if (user.id === payload.id) return payload;
-          return user;
-        });
+        const index = state.listUser.findIndex((user) => user.id === payload.id)
+        state.listUser[index] = payload
       })
   },
 });
