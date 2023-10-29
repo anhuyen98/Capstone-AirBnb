@@ -4,6 +4,7 @@ import { userReducer } from './user'
 import { locationReducer } from './location'
 import { roomReducer } from './room'
 import { bookingReducer } from './booking'
+import { commentReducer } from './comment'
 
 export const rootReducer = combineReducers({
     auth: authReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
     location: locationReducer,
     room: roomReducer,
     booking: bookingReducer,
+    comment: commentReducer,
 })

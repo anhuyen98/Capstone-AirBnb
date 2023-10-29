@@ -180,6 +180,14 @@ const Container = styled.header`
   .search {
     display: flex;
     align-items: center;
+    .toolBar .btn-search {
+      border-radius: 10px;
+      padding: 10px 20px;
+      margin-left: 0;
+      .spanBtn {
+          font-size: 14px;
+      }
+    }
     .btn-search {
       height: 46px !important;
       border: none;
@@ -191,12 +199,6 @@ const Container = styled.header`
         color: var(--primary-color) !important;
       }
     }
-    input {
-      background: transparent;
-      color: #111;
-      outline: none;
-      text-align: center;
-    }
     .btn-text.dir {
       background: transparent;
       cursor: pointer;
@@ -206,7 +208,7 @@ const Container = styled.header`
       margin-left: 20px;
     }
     span {
-      font-size: large;
+      font-size: 16px;
       font-weight: 500;
     }
   }
