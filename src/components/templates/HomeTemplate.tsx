@@ -38,7 +38,7 @@ export const HomeTemplate = () => {
           }
         </div>
         <div className="footer-img">
-          <p className="font-700 text-20">
+          <p className="font-700 text-20 mt-[40px] ml-[70px]">
             <span>Ở bất cứ đâu</span>
           </p>
           <div>
