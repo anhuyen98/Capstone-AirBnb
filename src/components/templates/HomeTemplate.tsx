@@ -22,14 +22,14 @@ export const HomeTemplate = () => {
         </div>
         <div className="grid grid-cols-4 content">
           {
-            listLocation?.map((vitri) => (
+            listLocation?.map((location) => (
               <div>
                 <Card
                 hoverable
                 style={{ width: "80%" }}
                 className="!mt-5 flex justify-center"
-                title={vitri.tenViTri}
-                cover={<img src={vitri.hinhAnh} alt="slide" />}
+                title={location.tenViTri}
+                cover={<img src={location.hinhAnh} alt="slide" />}
                 bordered={false}
               />
               </div>
@@ -38,7 +38,7 @@ export const HomeTemplate = () => {
           }
         </div>
         <div className="footer-img">
-          <p className="font-700 text-20">
+          <p className="font-700 text-20 mt-[40px] ml-[70px]">
             <span>Ở bất cứ đâu</span>
           </p>
           <div>

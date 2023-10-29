@@ -8,5 +8,5 @@ export const PATH = {
     manageLocation: 'admin/manageLocation',
     userDetail: '/user/:userId',
     room: '/room/:roomLocalId',
-    roomDetail: 'roomDetail',
+    roomDetail: '/roomDetail/:roomId',
 }
