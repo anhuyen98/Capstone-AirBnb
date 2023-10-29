@@ -28,8 +28,8 @@ export const HomeTemplate = () => {
                 hoverable
                 style={{ width: "80%" }}
                 className="!mt-5 flex justify-center"
-                title={location.tenViTri}
-                cover={<img src={location.hinhAnh} alt="slide" />}
+                title={vitri.tenViTri}
+                cover={<img src={vitri.hinhAnh} alt="slide" />}
                 bordered={false}
               />
               </div>
