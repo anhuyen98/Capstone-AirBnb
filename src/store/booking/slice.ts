@@ -20,10 +20,8 @@ const bookingSlice = createSlice({
         state.booking = payload;
       })
       .addCase(updateBookingByIdThunk.fulfilled, (state, {payload}) => {
-        state.listBooking.map((booking) => {
-          if (booking.id === payload.id) return payload
-          return booking
-        })
+        const index = state.listBooking.findIndex((booking) => booking.id === payload.id)
+        state.listBooking[index] = payload
       })
   },
 });

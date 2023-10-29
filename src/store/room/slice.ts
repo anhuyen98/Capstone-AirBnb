@@ -23,10 +23,8 @@ const roomSlice = createSlice({
             state.room = payload
         })
         .addCase(updateRoomByIdThunk.fulfilled, (state, {payload} ) => {
-            state.listRoom.map((room) => {
-                if (room.id === payload.id) return payload
-                return room
-            })
+            const index = state.listRoom.findIndex((room) => room.id === payload.id)
+            state.listRoom[index] = payload
         })
     },
 })

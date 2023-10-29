@@ -1,21 +1,29 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, generatePath, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
+  TeamOutlined,
+  LoginOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   AuditOutlined,
-  UserOutlined,
+  DatabaseOutlined,
+  IdcardOutlined,
   HomeOutlined,
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { Menu, theme, Layout } from "antd";
 import { Button } from "components";
 import { PATH } from "constant";
+import { useAppDispatch } from "store";
+import { authActions } from "store/auth";
+import { getIdUser } from "utils";
 
 const { Header, Sider, Content } = Layout;
 
 export const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -37,7 +45,7 @@ export const AdminLayout = () => {
             items={[
               {
                 key: "1",
-                icon: <UserOutlined />,
+                icon: <TeamOutlined />,
                 label: (
                   <NavLink to={PATH.manageUser}>Quản Lý Người Dùng</NavLink>
                 ),
@@ -46,14 +54,18 @@ export const AdminLayout = () => {
                 key: "2",
                 icon: <EnvironmentOutlined />,
                 label: (
-                  <NavLink to={PATH.manageLocation}>Quản Lý Thông Tin Vị Trí</NavLink>
+                  <NavLink to={PATH.manageLocation}>
+                    Quản Lý Thông Tin Vị Trí
+                  </NavLink>
                 ),
               },
               {
                 key: "3",
                 icon: <HomeOutlined />,
                 label: (
-                  <NavLink to={PATH.manageRoom}>Quản Lý Thông Tin Phòng</NavLink>
+                  <NavLink to={PATH.manageRoom}>
+                    Quản Lý Thông Tin Phòng
+                  </NavLink>
                 ),
               },
               {
@@ -63,11 +75,38 @@ export const AdminLayout = () => {
                   <NavLink to={PATH.manageBooking}>Quản Lý Đặt Phòng</NavLink>
                 ),
               },
+              {
+                key: "5",
+                icon: <DatabaseOutlined />,
+                label: "Trang chủ",
+                onClick: () => {
+                  navigate(PATH.home);
+                },
+              },
+              {
+                key: "6",
+                icon: <IdcardOutlined />,
+                label: "Cá nhân",
+                onClick: () => {
+                  const id = getIdUser()
+                  const path = generatePath(PATH.userDetail, {userId: id})
+                  navigate(path);
+                },
+              },
+              {
+                key: "7",
+                icon: <LoginOutlined />,
+                label: "Đăng xuất",
+                onClick: () => {
+                  dispatch(authActions.logOut());
+                  navigate(PATH.login);
+                },
+              },
             ]}
           />
         </Sider>
         <Layout>
-          <Header style={{ padding: 0, color: "#eee", background: '#001529' }}>
+          <Header style={{ padding: 0, color: "#eee", background: "#001529" }}>
             <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

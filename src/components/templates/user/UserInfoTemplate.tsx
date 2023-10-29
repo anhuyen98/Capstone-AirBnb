@@ -13,21 +13,55 @@ import { RegisterSchema, RegisterSchemaType } from "schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError, sleep } from "utils";
 import { toast } from "react-toastify";
+import { getListRoomThunk } from "store/room";
 export const UserInfoTemplate = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const params = useParams();
   console.log("params: ", params);
-
+  const { listRoom } = useSelector((state: RootState) => state.room)
   const dispatch = useAppDispatch();
 
-  const data = Array.from({ length: 3 }).map((_, i) => ({
-    href: "https://ant.design",
-    title: `ant design part ${i}`,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-    description:
-      "Ant Design, a design language for background applications, is refined by Ant UED Team.",
-    content:
-      "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+  type DataType = {
+    id?: number,
+    tenPhong?: string,
+    khach?: number,
+    phongNgu?: number,
+    giuong?: number,
+    phongTam?: number,
+    moTa?: string,
+    giaTien?: number,
+    mayGiat?: boolean,
+    banLa?: boolean,
+    tivi?: boolean,
+    dieuHoa?: boolean,
+    wifi?: boolean,
+    bep?: boolean,
+    doXe?: boolean,
+    hoBoi?: boolean,
+    banUi?: boolean,
+    maViTri?: number,
+    hinhAnh?: string
+  }
+  const data: DataType[] = listRoom?.map((room) => ({
+    id: room.id,
+    tenPhong: room.tenPhong,
+    khach: room.khach,
+    phongNgu: room.phongNgu,
+    giuong: room.giuong,
+    phongTam: room.phongTam,
+    moTa: room.moTa,
+    giaTien: room.giaTien,
+    mayGiat: room.mayGiat,
+    banLa: room.banLa,
+    tivi: room.tivi,
+    dieuHoa: room.dieuHoa,
+    wifi: room.wifi,
+    bep: room.bep,
+    doXe: room.doXe,
+    hoBoi: room.hoBoi,
+    banUi: room.banUi,
+    maViTri: room.maViTri,
+    hinhAnh: room.hinhAnh
   }));
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -84,10 +118,10 @@ export const UserInfoTemplate = () => {
   }, [user, reset]);
   useEffect(() => {
     dispatch(getUserByIdThunk(Number(params.userId)))
+    dispatch(getListRoomThunk())
   },[dispatch, params])
   return (
     <ContainerUserInfo>
-      <h1>UserInfoTemplate</h1>
       <div className="w-3/4 m-auto grid grid-cols-9 gap-5">
         <div className="col-start-1 col-span-3 ">
           <div className="p-5 border border-slate-500 rounded-[25px]">
@@ -137,8 +171,9 @@ export const UserInfoTemplate = () => {
               Chỉnh sửa hồ sơ
             </Button>
           </div>
+          <hr className="border border-stone-300"/>
           <div>
-            <h4>Phòng đã thuê</h4>
+            <h4 className="pl-[25px]">Phòng đã thuê</h4>
             <List
               itemLayout="vertical"
               size="large"
@@ -149,14 +184,9 @@ export const UserInfoTemplate = () => {
                 pageSize: 3,
               }}
               dataSource={data}
-              // footer={
-              //   <div>
-              //     <b>ant design</b> footer part
-              //   </div>
-              // }
               renderItem={(item) => (
                 <List.Item
-                  key={item.title}
+                  key={item.id}
                   actions={[
                     <IconText
                       icon={StarOutlined}
@@ -176,18 +206,23 @@ export const UserInfoTemplate = () => {
                   ]}
                   extra={
                     <img
-                      width={272}
-                      alt="logo"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                      width={300}
+                      alt="..."
+                      src={item.hinhAnh}
                     />
                   }
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.avatar} />}
-                    title={<a href={item.href}>{item.title}</a>}
-                    description={item.description}
+                    // avatar={<Avatar src={item.id} />}
+                    title={item.tenPhong}
+                    description= {
+                      <p className="font-600"> Giá: {item.giaTien} $</p>
+                    }
                   />
-                  {item.content}
+                  {item.moTa.substring(0, 100)}. . .
+                  <p className="font-600 my-5">
+                    Số lượng khách: {item.khach}
+                  </p>
                 </List.Item>
               )}
             />
@@ -289,6 +324,7 @@ export const UserInfoTemplate = () => {
 };
 
 export const ContainerUserInfo = styled.div`
+  padding-top: 50px;
   .authenticator {
     margin: 30px 15px;
     h6 {
@@ -301,7 +337,7 @@ export const ContainerUserInfo = styled.div`
     }
   }
   .bio {
-    margin: 20px 0;
+    margin-bottom: 30px;
     p {
       color: #8d8d8d;
       font-size: 14px;

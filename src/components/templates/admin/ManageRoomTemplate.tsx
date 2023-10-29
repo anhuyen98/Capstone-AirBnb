@@ -18,7 +18,7 @@ import { handleError } from "utils";
 import { toast } from "react-toastify";
 import { useQueryUrl } from "hooks";
 export const ManageRoomTemplate = () => {
-  const [queryUrl, setQueryUrl] = useQueryUrl()
+  const [queryUrl, setQueryUrl] = useQueryUrl();
   const { listRoom, room } = useSelector((state: RootState) => state.room);
   const {
     handleSubmit,
@@ -34,12 +34,12 @@ export const ManageRoomTemplate = () => {
       await dispatch(postRoomThunk(value));
       reset({
         id: 0,
-        tenPhong: '',
-        moTa: '',
+        tenPhong: "",
+        moTa: "",
         khach: 0,
         giaTien: 0,
-        hinhAnh: ''
-      })
+        hinhAnh: "",
+      });
       toast.success("Thêm phòng thành công");
     } catch (error) {
       handleError(error);
@@ -47,28 +47,28 @@ export const ManageRoomTemplate = () => {
   };
   const onUpdate: SubmitHandler<RoomSchemaType> = async (value) => {
     try {
-      console.log(value)
+      console.log(value);
       const payload = {
         id: Number(queryUrl.id),
         dataPayLoad: {
           ...value,
-          id: Number(queryUrl.id)
-        }
-      }
-      await dispatch(updateRoomByIdThunk(payload))
+          id: Number(queryUrl.id),
+        },
+      };
+      await dispatch(updateRoomByIdThunk(payload));
       reset({
         id: 0,
-        tenPhong: '',
-        moTa: '',
+        tenPhong: "",
+        moTa: "",
         khach: 0,
         giaTien: 0,
-        hinhAnh: ''
-      })
-      toast.success('Cập nhật thành công')
+        hinhAnh: "",
+      });
+      toast.success("Cập nhật thành công");
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
+  };
   const onError: SubmitErrorHandler<RoomSchemaType> = (value) => {
     console.log(value);
   };
@@ -120,8 +120,8 @@ export const ManageRoomTemplate = () => {
           <Button
             onClick={() => {
               setQueryUrl({
-                id: String(record.id) || undefined
-              })
+                id: String(record.id) || undefined,
+              });
               dispatch(getRoomByIdThunk(record.id))
                 .unwrap()
                 .then(() => {
@@ -150,15 +150,13 @@ export const ManageRoomTemplate = () => {
     },
   ];
 
-  const data: DataType[] = listRoom?.map((room) => {
-    return {
-      id: room.id,
-      giaTien: room.giaTien,
-      tenPhong: room.tenPhong,
-      khach: room.khach,
-      hinhAnh: room.hinhAnh,
-    };
-  });
+  const data: DataType[] = listRoom?.map((room) => ({
+    id: room.id,
+    giaTien: room.giaTien,
+    tenPhong: room.tenPhong,
+    khach: room.khach,
+    hinhAnh: room.hinhAnh,
+  }));
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
@@ -172,7 +170,6 @@ export const ManageRoomTemplate = () => {
   }, [reset, room]);
   return (
     <div>
-
       {/* Button Room+ */}
       <div className="m-5">
         <Button type="primary" onClick={() => setIsModal1Open(true)}>
@@ -186,12 +183,12 @@ export const ManageRoomTemplate = () => {
         onCancel={() => {
           reset({
             id: 0,
-            tenPhong: '',
-            moTa: '',
+            tenPhong: "",
+            moTa: "",
             khach: 0,
             giaTien: 0,
-            hinhAnh: ''
-          })
+            hinhAnh: "",
+          });
           setIsModal1Open(false);
         }}
         footer={null}
@@ -264,22 +261,22 @@ export const ManageRoomTemplate = () => {
         open={isModal2Open}
         onCancel={() => {
           setQueryUrl({
-            id: undefined
-          })
+            id: undefined,
+          });
           reset({
             id: 0,
-            tenPhong: '',
-            moTa: '',
+            tenPhong: "",
+            moTa: "",
             khach: 0,
             giaTien: 0,
-            hinhAnh: ''
-          })
+            hinhAnh: "",
+          });
           setIsModal2Open(false);
         }}
         okText="Cập Nhật"
         okButtonProps={{
           htmlType: "submit",
-          form: 'updateForm'
+          form: "updateForm",
         }}
         cancelText="Hủy"
         footer={(_, { OkBtn, CancelBtn }) => (
@@ -289,7 +286,11 @@ export const ManageRoomTemplate = () => {
           </div>
         )}
       >
-        <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate)}>
+        <form
+          id="updateForm"
+          className="my-5"
+          onSubmit={handleSubmit(onUpdate)}
+        >
           <Input
             label="ID"
             name="id"
@@ -335,7 +336,7 @@ export const ManageRoomTemplate = () => {
         </form>
       </Modal>
       {/* Show UI listRoom */}
-      <Table columns={columns} dataSource={data} />
+      <Table rowKey={(record) => record.id} columns={columns} dataSource={data} />
     </div>
   );
 };

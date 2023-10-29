@@ -22,7 +22,7 @@ import { handleError } from "utils";
 import { useQueryUrl } from "hooks";
 export const ManageUserTemplate = () => {
   const dispatch = useAppDispatch();
-  const [queryUrl, setQueryUrl] = useQueryUrl()
+  const [queryUrl, setQueryUrl] = useQueryUrl();
   const { listUser, user, isEditing } = useSelector(
     (state: RootState) => state.user
   );
@@ -39,53 +39,53 @@ export const ManageUserTemplate = () => {
     try {
       await dispatch(postUserThunk(value));
       reset({
-        name: '',
-        birthday: '',
-        email: '',
+        name: "",
+        birthday: "",
+        email: "",
         gender: false,
-        password: '',
-        phone: '',
-        role: ''
+        password: "",
+        phone: "",
+        role: "",
       });
       toast.success("Bạn đã đăng ký thành công");
     } catch (error) {
       handleError(error, "Đăng ký thất bại");
     }
   };
-  const onUpdate: SubmitHandler<RegisterSchemaType> = async(value) => {
+  const onUpdate: SubmitHandler<RegisterSchemaType> = async (value) => {
     try {
       const payload = {
         id: Number(queryUrl.id),
         dataPayLoad: {
           ...value,
-          id: Number(queryUrl.id)
-        }
-      }
-      await dispatch(updateUserByIdThunk(payload))
+          id: Number(queryUrl.id),
+        },
+      };
+      await dispatch(updateUserByIdThunk(payload));
       reset({
-        name: '',
-        birthday: '',
-        email: '',
+        name: "",
+        birthday: "",
+        email: "",
         gender: false,
-        password: '',
-        phone: '',
-        role: ''
+        password: "",
+        phone: "",
+        role: "",
       });
-      toast.success('Cập nhật thành công')
+      toast.success("Cập nhật thành công");
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
-  const onError: SubmitErrorHandler<RegisterSchemaType> = async(value) => {
-    console.log(value)
-  }
+  };
+  const onError: SubmitErrorHandler<RegisterSchemaType> = async (value) => {
+    console.log(value);
+  };
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
 
   // Table
   type DataType = {
-    key?: number;
+    id?: number;
     avatar?: string;
     birthday?: string;
     email?: string;
@@ -132,9 +132,9 @@ export const ManageUserTemplate = () => {
           <Button
             onClick={() => {
               setQueryUrl({
-                id: String(record.key) || undefined
-              })
-              dispatch(getUserByIdThunk(record.key))
+                id: String(record.id) || undefined,
+              });
+              dispatch(getUserByIdThunk(record.id))
                 .unwrap()
                 .then(() => {
                   setIsModal2Open(true);
@@ -145,13 +145,13 @@ export const ManageUserTemplate = () => {
           </Button>
           <Button
             onClick={() => {
-              dispatch(deleteUserByIdThunk(record.key))
+              dispatch(deleteUserByIdThunk(record.id))
                 .unwrap()
                 .then(() => {
                   toast.success("Xóa thành công");
                 })
                 .catch((error) => {
-                  handleError(error)
+                  handleError(error);
                 });
             }}
           >
@@ -162,16 +162,14 @@ export const ManageUserTemplate = () => {
     },
   ];
 
-  const data: DataType[] = listUser?.map((user) => {
-    return {
-      key: user.id,
-      avatar: user.avatar,
-      birthday: user.birthday,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    };
-  });
+  const data: DataType[] = listUser?.map((user) => ({
+    id: user.id,
+    avatar: user.avatar,
+    birthday: user.birthday,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+  }));
 
   // Call API
   useEffect(() => {
@@ -180,7 +178,7 @@ export const ManageUserTemplate = () => {
 
   // EditForm
   useEffect(() => {
-      reset(user)
+    reset(user);
   }, [user, reset]);
 
   return (
@@ -198,13 +196,13 @@ export const ManageUserTemplate = () => {
         onCancel={() => {
           setIsModal1Open(false);
           reset({
-            name: '',
-            birthday: '',
-            email: '',
+            name: "",
+            birthday: "",
+            email: "",
             gender: false,
-            password: '',
-            phone: '',
-            role: ''
+            password: "",
+            phone: "",
+            role: "",
           });
         }}
         footer={null}
@@ -284,27 +282,27 @@ export const ManageUserTemplate = () => {
         open={isModal2Open}
         onCancel={() => {
           setQueryUrl({
-            id: undefined
-          })
+            id: undefined,
+          });
           setIsModal2Open(false);
           reset({
-            name: '',
-            birthday: '',
-            email: '',
+            name: "",
+            birthday: "",
+            email: "",
             gender: false,
-            password: '',
-            phone: '',
-            role: ''
+            password: "",
+            phone: "",
+            role: "",
           });
           dispatch(userActions.cancelEditing());
         }}
         okText="Cập Nhật"
         okButtonProps={{
           htmlType: "submit",
-          form: 'updateForm'
+          form: "updateForm",
         }}
         cancelText="Hủy"
-        footer={(_, { OkBtn,CancelBtn }) => (
+        footer={(_, { OkBtn, CancelBtn }) => (
           <div>
             <Button
               onClick={() => {
@@ -319,7 +317,11 @@ export const ManageUserTemplate = () => {
         )}
       >
         <ContainerForm>
-          <form id="updateForm" className="my-5" onSubmit={handleSubmit(onUpdate, onError)}>
+          <form
+            id="updateForm"
+            className="my-5"
+            onSubmit={handleSubmit(onUpdate, onError)}
+          >
             <Input
               label="ID"
               name="id"
@@ -327,7 +329,7 @@ export const ManageUserTemplate = () => {
               register={register}
             />
             <Input
-            type="text"
+              type="text"
               label="Ngày/ tháng/ năm"
               name="birthday"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -337,7 +339,7 @@ export const ManageUserTemplate = () => {
               errors={errors?.birthday?.message}
             />
             <Input
-            type="text"
+              type="text"
               label="Email"
               name="email"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -347,7 +349,7 @@ export const ManageUserTemplate = () => {
               errors={errors?.email?.message}
             />
             <Input
-            type="text"
+              type="text"
               label="Số điện thoại"
               name="phone"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -357,7 +359,7 @@ export const ManageUserTemplate = () => {
               errors={errors?.phone?.message}
             />
             <Input
-            type="text"
+              type="text"
               label="Tên"
               name="name"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -367,7 +369,7 @@ export const ManageUserTemplate = () => {
               errors={errors?.name?.message}
             />
             <Input
-            type="text"
+              type="text"
               label="Mật khẩu"
               name="password"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -377,7 +379,7 @@ export const ManageUserTemplate = () => {
               errors={errors?.password?.message}
             />
             <Input
-            type="text"
+              type="text"
               label="Chức vụ"
               name="role"
               className={cn("my-[15px] mx-5 py-3 px-4 pointer-events-none", {
@@ -391,7 +393,7 @@ export const ManageUserTemplate = () => {
         </ContainerForm>
       </Modal>
       {/* Show UI list User */}
-      <Table columns={columns} dataSource={data} />
+      <Table rowKey={(record) => record.id} columns={columns} dataSource={data} />
     </div>
   );
 };

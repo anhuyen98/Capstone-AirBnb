@@ -151,15 +151,13 @@ export const ManageBookingTemplate = () => {
     },
   ];
 
-  const data: DataType[] = listBooking?.map((booking) => {
-    return {
+  const data: DataType[] = listBooking?.map((booking) => ({
       id: booking.id,
       maPhong: booking.maPhong,
       ngayDen: fomatDay(booking.ngayDen.toString()),
       ngayDi: fomatDay(booking.ngayDi.toString()),
       soLuongKhach: booking.soLuongKhach,
-    };
-  });
+    }));
   // Modal
   const [isModal1Open, setIsModal1Open] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
@@ -316,7 +314,7 @@ export const ManageBookingTemplate = () => {
         </form>
       </Modal>
       {/* Show UI listBooking */}
-      <Table columns={columns} dataSource={data} />
+      <Table rowKey={(record) => record.id} columns={columns} dataSource={data} />
     </div>
   );
 };

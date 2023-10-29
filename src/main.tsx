@@ -7,15 +7,18 @@ import { ToastContainer } from "react-toastify";
 import { StyleProvider } from "@ant-design/cssinjs";
 import { Provider } from "react-redux";
 import { store } from "store";
+import { ConfigProvider } from "antd";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <BrowserRouter>
     <ToastContainer />
-    <StyleProvider hashPriority="high">
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </StyleProvider>
+    <ConfigProvider>
+      <StyleProvider hashPriority="high">
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </StyleProvider>
+    </ConfigProvider>
   </BrowserRouter>
   // </React.StrictMode>,
 );

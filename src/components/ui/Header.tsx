@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, generatePath, useNavigate } from "react-router-dom";
 import { Input, Button, Avatar, Popover } from "components";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
@@ -6,10 +6,13 @@ import { RootState, useAppDispatch } from "store";
 import { getUserByIdThunk } from "store/user";
 import { getIdUser } from "utils";
 import { useEffect } from "react";
+import { authActions } from "store/auth";
+import { PATH } from "constant";
 
 export const Header = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   useEffect(() => {
     const id = getIdUser();
     dispatch(getUserByIdThunk(Number(id)));
@@ -22,6 +25,9 @@ export const Header = () => {
             src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
             alt="horse"
             width={100}
+            onClick={() => {
+              navigate(PATH.home)
+            }}
           />
           <div className="search">
             <Input />
@@ -51,10 +57,25 @@ export const Header = () => {
               {/* <i className="fa-solid fa-address-card"></i> */}
               <Popover
                 content={
-                  <div className="flex flex-col items-center justify-between h-36">
-                    <img src={user?.avatar} alt="" width="100px" className="border border-dashed border-slate-600 rounded-10"/>
-                    <Button type="text" htmlType="button" danger className="my-10">Thông tin cá nhân</Button>
-                    <Button type="primary" danger>
+                  <div className="flex flex-col items-center justify-between h-38">
+                    {
+                      user?.avatar && <img src={user?.avatar} alt="" width="100px" className="border border-dashed border-slate-600 rounded-10"/>
+                    }
+                    <hr className="my-4"/>
+                    <Button type="text" htmlType="button" danger onClick={() => {
+                      const path = generatePath(PATH.userDetail, {userId: user?.id})
+                      navigate(path)
+                    }}>Thông tin cá nhân</Button>
+                    {
+                      user?.role.match('ADMIN') && <Button type="text" htmlType="button" danger onClick={() => {
+                        navigate(PATH.manageUser)
+                      }}>Quản lý (ADMIN)</Button>
+                    }
+                    <hr className="my-4"/>
+                    <Button type="primary" danger onClick={() => {
+                      dispatch(authActions.logOut())
+                      navigate(PATH.login)
+                    }}>
                     <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i><span className="ml-[5px] mr-10">Đăng xuất</span>
                     </Button>
                   </div>
