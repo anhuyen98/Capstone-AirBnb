@@ -1,18 +1,53 @@
 import { NavLink, generatePath, useNavigate } from "react-router-dom";
-import { Input, Button, Avatar, Popover } from "components";
+import { Button, Avatar, Popover, ToolBar } from "components";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
 import { getUserByIdThunk } from "store/user";
 import { getIdUser } from "utils";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { authActions } from "store/auth";
 import { PATH } from "constant";
-
+import { Tabs } from "antd";
+import type { TabsProps } from "antd";
+// import cn from 'classnames'
 export const Header = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [Ui, setUi] = useState(false);
+  const onChange = (key: string) => {
+    console.log(key);
+  };
+  const toolBar = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const handler = (e) => {
+      if(!toolBar.current.contains(e.target)) {
+        setUi(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return (
+      removeEventListener('mousedown', handler)
+    )
+  }, [])
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Chỗ ở",
+      children: <ToolBar />,
+    },
+    {
+      key: "2",
+      label: "Trải nghiệm",
+      children: <ToolBar />,
+    },
+    {
+      key: "3",
+      label: "Trải nghiệm trực tuyến",
+      children: <ToolBar />,
+    },
+  ];
   useEffect(() => {
     const id = getIdUser();
     dispatch(getUserByIdThunk(Number(id)));
@@ -26,23 +61,39 @@ export const Header = () => {
             alt="horse"
             width={100}
             onClick={() => {
-              navigate(PATH.home)
+              navigate(PATH.home);
             }}
           />
-          <div className="search">
-            <Input />
-            <Button className="btn-text dir dir-ltr">
-              <span>Địa điểm bất kỳ</span>
-            </Button>
-            <Button className="btn-text dir dir-ltr">
-              <span> Tuần bất kỳ </span>
-            </Button>
-            <Button className="btn-text dir dir-ltr">
-              <span>Thêm Khách</span>
-            </Button>
-            <Button className="btn-search">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </Button>
+          <div
+            className="search"
+            onClick={() => {
+              setUi(true);
+            }}
+            ref={toolBar}
+          >
+            {!Ui ? (
+              <div>
+                <Button className="btn-text dir dir-ltr">
+                  <span>Địa điểm bất kỳ</span>
+                </Button>
+                <Button className="btn-text dir dir-ltr">
+                  <span> Tuần bất kỳ </span>
+                </Button>
+                <Button className="btn-text dir dir-ltr">
+                  <span>Thêm Khách</span>
+                </Button>
+                <Button className="btn-search">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </Button>
+              </div>
+            ) : (
+              <Tabs
+                defaultActiveKey="1"
+                centered
+                items={items}
+                onChange={onChange}
+              />
+            )}
           </div>
           <div className="nav-right flex gap-[50px]">
             <nav className="nav-text">
@@ -54,29 +105,54 @@ export const Header = () => {
               </NavLink>
             </nav>
             <div className="avatar-info">
-              {/* <i className="fa-solid fa-address-card"></i> */}
               <Popover
                 content={
                   <div className="flex flex-col items-center justify-between h-38">
-                    {
-                      user?.avatar && <img src={user?.avatar} alt="" width="100px" className="border border-dashed border-slate-600 rounded-10"/>
-                    }
-                    <hr className="my-4"/>
-                    <Button type="text" htmlType="button" danger onClick={() => {
-                      const path = generatePath(PATH.userDetail, {userId: user?.id})
-                      navigate(path)
-                    }}>Thông tin cá nhân</Button>
-                    {
-                      user?.role.match('ADMIN') && <Button type="text" htmlType="button" danger onClick={() => {
-                        navigate(PATH.manageUser)
-                      }}>Quản lý (ADMIN)</Button>
-                    }
-                    <hr className="my-4"/>
-                    <Button type="primary" danger onClick={() => {
-                      dispatch(authActions.logOut())
-                      navigate(PATH.login)
-                    }}>
-                    <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i><span className="ml-[5px] mr-10">Đăng xuất</span>
+                    {user?.avatar && (
+                      <img
+                        src={user?.avatar}
+                        alt=""
+                        width="100px"
+                        className="border border-dashed border-slate-600 rounded-10"
+                      />
+                    )}
+                    <hr className="my-4" />
+                    <Button
+                      type="text"
+                      htmlType="button"
+                      danger
+                      onClick={() => {
+                        const path = generatePath(PATH.userDetail, {
+                          userId: user?.id,
+                        });
+                        navigate(path);
+                      }}
+                    >
+                      Thông tin cá nhân
+                    </Button>
+                    {user?.role.match("ADMIN") && (
+                      <Button
+                        type="text"
+                        htmlType="button"
+                        danger
+                        onClick={() => {
+                          navigate(PATH.manageUser);
+                        }}
+                      >
+                        Quản lý (ADMIN)
+                      </Button>
+                    )}
+                    <hr className="my-4" />
+                    <Button
+                      type="primary"
+                      danger
+                      onClick={() => {
+                        dispatch(authActions.logOut());
+                        navigate(PATH.login);
+                      }}
+                    >
+                      <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i>
+                      <span className="ml-[5px] mr-10">Đăng xuất</span>
                     </Button>
                   </div>
                 }

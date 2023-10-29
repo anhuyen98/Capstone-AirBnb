@@ -101,7 +101,7 @@ export const ManageRoomTemplate = () => {
       render: (text) => <p style={{ width: "200px" }}>{text}</p>,
     },
     {
-      title: "Giá/ Ngày",
+      title: "Giá($) / Ngày",
       dataIndex: "giaTien",
       key: "giaTien",
       render: (text) => <p style={{ width: "30px" }}>{text} $</p>,

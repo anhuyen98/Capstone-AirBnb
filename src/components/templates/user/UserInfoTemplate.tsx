@@ -216,7 +216,7 @@ export const UserInfoTemplate = () => {
                     // avatar={<Avatar src={item.id} />}
                     title={item.tenPhong}
                     description= {
-                      <p className="font-600"> Giá: {item.giaTien} $</p>
+                      <p className="font-600"> Giá: ${item.giaTien} / ngày</p>
                     }
                   />
                   {item.moTa.substring(0, 100)}. . .
