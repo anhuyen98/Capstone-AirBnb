@@ -17,7 +17,6 @@ import { getListRoomThunk } from "store/room";
 export const UserInfoTemplate = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const params = useParams();
-  console.log("params: ", params);
   const { listRoom } = useSelector((state: RootState) => state.room)
   const dispatch = useAppDispatch();
 

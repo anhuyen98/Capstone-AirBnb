@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Outlet, useParams } from "react-router-dom";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 import { RootState, useAppDispatch } from "store";
 import { useEffect } from "react";
 import { getListRoomByLocalThunk } from "store/room";
@@ -7,12 +7,14 @@ import { Card } from "antd";
 import styled from "styled-components";
 import { Tag } from "components";
 import { getListLocationThunk } from "store/location";
+import { PATH } from "constant";
 const { Meta } = Card;
 
 export const ListRoomTemplate = () => {
   const { listRoomByLocal } = useSelector((state: RootState) => state.room);
   let { listLocation } = useSelector((state: RootState) => state.location);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const params = useParams();
   if (listLocation) {
     listLocation = listLocation?.filter(
@@ -55,7 +57,8 @@ export const ListRoomTemplate = () => {
                   style={{ width: 400 }}
                   cover={<img alt="example" src={room.hinhAnh} />}
                   onClick={() => {
-                    console.log(room.id)
+                    const path = generatePath(PATH.roomDetail, {roomId: room.id})
+                    navigate(path)
                   }}
                 >
                   <div className="text-12 opacity-60 mb-4">
@@ -103,7 +106,6 @@ export const ListRoomTemplate = () => {
         ></iframe>
       </div>
 
-      <Outlet />
     </ListContainer>
   );
 };
@@ -111,7 +113,6 @@ export const ListRoomTemplate = () => {
 const ListContainer = styled.div`
   .card {
     .ant-card {
-      /* z-index: -1; */
       margin: auto;
     }
   }
@@ -122,7 +123,6 @@ const ListContainer = styled.div`
   }
   .tag {
     .ant-tag {
-      /* z-index: -1; */
       font-size: 12px;
       font-weight: 600;
     }

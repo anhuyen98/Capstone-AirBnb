@@ -22,8 +22,9 @@ export const router: RouteObject[] = [
         element: <MainLayouts />,
         children: [
             {
+                index: true,
                 element: <Home />,
-                path: PATH.home,
+                path: '/',
             },
             {
                 element: <Room />,

@@ -21,9 +21,9 @@ export const RoomDetailTemplate = () => {
     <Container>
       <div className="header-content">
         <div className="grid grid-rows-2 items-center justify-center gap-[50px]">
-          <div key={room.id}>
-            <p>{room.tenPhong}</p>
-            <img src={room.hinhAnh} alt="slider" />
+          <div key={room?.id}>
+            <p>{room?.tenPhong}</p>
+            <img src={room?.hinhAnh} alt="slider" />
           </div>
           <div className="grid grid-cols-2 gap-[50px]">
             <div className="grid grid-rows-3 gap-[20px]">
@@ -32,7 +32,7 @@ export const RoomDetailTemplate = () => {
                   <p className="font-700 text-20">
                     <span>Toàn bộ căn hộ condo</span>
                   </p>
-                  <p><span>{room.khach} khách</span> ‧ <span>{room.phongNgu} phòng ngủ</span> ‧ <span>{room.phongTam} phòng tắm</span></p>
+                  <p><span>{room?.khach} khách</span> ‧ <span>{room?.phongNgu} phòng ngủ</span> ‧ <span>{room?.phongTam} phòng tắm</span></p>
                 </div>
                 <div>
                   <Avatar size="large">
@@ -42,7 +42,7 @@ export const RoomDetailTemplate = () => {
               </div>
               <hr />
               <div>
-                <p>{room.moTa}</p>
+                <p>{room?.moTa}</p>
               </div>
               <hr />
               <div>
@@ -71,7 +71,7 @@ export const RoomDetailTemplate = () => {
               <Card>
                 <div >
                   <div className="grid grid-cols-2">
-                    <p>${room.giaTien} / đêm</p>
+                    <p>${room?.giaTien} / đêm</p>
                     <p><i className="fa-solid fa-star"></i>(18 đánh giá)</p>
                   </div>
                   <div className="mt-[20px]">
@@ -80,7 +80,7 @@ export const RoomDetailTemplate = () => {
                       {/* <span>{booking.}</span> */}
                     </Button>
                     <Button className="w-1/2">TRẢ PHÒNG</Button><br />
-                    <Select className="w-full">{room.khach}</Select>
+                    <Select className="w-full">{room?.khach}</Select>
                   </div>
                   <div className="mt-[20px]">
                     <Button className="w-full">Đặt phòng</Button>

@@ -80,7 +80,7 @@ export const AdminLayout = () => {
                 icon: <DatabaseOutlined />,
                 label: "Trang chủ",
                 onClick: () => {
-                  navigate(PATH.home);
+                  navigate('/');
                 },
               },
               {

@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginSchema, LoginSchemaType } from "schema";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { PATH } from "constant";
 import { Input, Button } from "components";
 import { handleError } from "utils";
 import { RootState, useAppDispatch } from "store";
@@ -28,7 +27,7 @@ export const LoginTemplate = () => {
       .unwrap()
       .then(() => {
         toast.success("Đăng nhập thành công");
-        navigate(PATH.home);
+        navigate('/');
       })
       .catch((err) => {
         handleError(err);

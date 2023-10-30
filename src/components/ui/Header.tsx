@@ -4,41 +4,42 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
 import { getUserByIdThunk } from "store/user";
-import { getIdUser } from "utils";
+import { getIdUser, getTokenUser } from "utils";
 import { useEffect, useState, useRef } from "react";
 import { authActions } from "store/auth";
 import { PATH } from "constant";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
-import cn from 'classnames'
+import cn from "classnames";
 export const Header = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [scroll, setSroll] = useState<boolean>(false) 
+  const [scroll, setSroll] = useState<boolean>(false);
   const [Ui, setUi] = useState(false);
   const handleScroll = () => {
     if (window.pageYOffset > 20) {
-      setSroll(true)
-      return
+      setSroll(true);
+      return;
     }
-    setSroll(false)
-  }
+    setSroll(false);
+  };
   const onChange = (key: string) => {
     console.log(key);
   };
-  const toolBar = useRef<HTMLDivElement>(null)
+  const toolBar = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handler = (e) => {
-      if(!toolBar?.current?.contains(e.target)) {
-        setUi(false)
+      if (!toolBar?.current?.contains(e.target)) {
+        setUi(false);
       }
-    }
-    document.addEventListener('mousedown', handler)
-    return (
-      removeEventListener('mousedown', handler)
-    )
-  }, [])
+    };
+    document.addEventListener("mousedown", handler);
+    return removeEventListener("mousedown", handler);
+  }, []);
+
+  const token = getTokenUser();
+  console.log("token: ", token);
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -61,15 +62,18 @@ export const Header = () => {
     dispatch(getUserByIdThunk(Number(id)));
   }, [dispatch]);
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
-    <Container className={cn({
-      'header-fixed': scroll,
-    })}>
+    <Container
+      className={cn({
+        "header-fixed": scroll,
+        "header-nofixed": !scroll,
+      })}
+    >
       <div className="header-content">
         <div className="mb-[20px] flex justify-center items-center gap-[70px]">
           <img
@@ -77,7 +81,7 @@ export const Header = () => {
             alt="horse"
             width={100}
             onClick={() => {
-              navigate(PATH.home);
+              navigate("/");
             }}
           />
           <div
@@ -121,63 +125,95 @@ export const Header = () => {
               </NavLink>
             </nav>
             <div className="avatar-info">
-              <Popover
-                content={
-                  <div className="flex flex-col items-center justify-between h-38">
-                    {user?.avatar && (
-                      <img
-                        src={user?.avatar}
-                        alt=""
-                        width="100px"
-                        className="border border-dashed border-slate-600 rounded-10"
-                      />
-                    )}
-                    <hr className="my-4" />
-                    <Button
-                      type="text"
-                      htmlType="button"
-                      danger
-                      onClick={() => {
-                        const path = generatePath(PATH.userDetail, {
-                          userId: user?.id,
-                        });
-                        navigate(path);
-                      }}
-                    >
-                      Thông tin cá nhân
-                    </Button>
-                    {user?.role.match("ADMIN") && (
+              {token ? (
+                <Popover
+                  content={
+                    <div className="flex flex-col items-center justify-between h-38">
+                      {user?.avatar && (
+                        <img
+                          src={user?.avatar}
+                          alt=""
+                          width="100px"
+                          className="border border-dashed border-slate-600 rounded-10"
+                        />
+                      )}
+                      <hr className="my-4" />
                       <Button
                         type="text"
                         htmlType="button"
                         danger
                         onClick={() => {
-                          navigate(PATH.manageUser);
+                          const path = generatePath(PATH.userDetail, {
+                            userId: user?.id,
+                          });
+                          navigate(path);
                         }}
                       >
-                        Quản lý (ADMIN)
+                        Thông tin cá nhân
                       </Button>
-                    )}
-                    <hr className="my-4" />
+                      {user?.role.match("ADMIN") && (
+                        <Button
+                          type="text"
+                          htmlType="button"
+                          danger
+                          onClick={() => {
+                            navigate(PATH.manageUser);
+                          }}
+                        >
+                          Quản lý (ADMIN)
+                        </Button>
+                      )}
+                      <hr className="my-4" />
+                      <Button
+                        type="primary"
+                        danger
+                        onClick={() => {
+                          dispatch(authActions.logOut());
+                          navigate(PATH.login);
+                        }}
+                      >
+                        <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i>
+                        <span className="ml-[5px] mr-10">Đăng xuất</span>
+                      </Button>
+                    </div>
+                  }
+                >
+                  <Avatar size="large">
+                    <i className="fa-solid fa-bars"></i>
+                    <i className="fa-regular fa-user text-20"></i>
+                  </Avatar>
+                </Popover>
+              ) : (
+                <Popover content={
+                  <div className="flex flex-col h-[80px] justify-evenly">
                     <Button
-                      type="primary"
-                      danger
-                      onClick={() => {
-                        dispatch(authActions.logOut());
-                        navigate(PATH.login);
-                      }}
-                    >
-                      <i className="fa-solid fa-arrow-right-from-bracket ml-10 mr-[5px]"></i>
-                      <span className="ml-[5px] mr-10">Đăng xuất</span>
-                    </Button>
+                        type="primary"
+                        danger
+                        onClick={() => {
+                          navigate(PATH.register);
+                        }}
+                      >
+                        <i className="fa-solid fa-pen-nib fa-beat-fade mr-8"></i>
+                        <span className="ml-[5px] mr-10">Đăng ký</span>
+                      </Button>
+                    <Button
+                        type="primary"
+                        danger
+                        onClick={() => {
+                          navigate(PATH.login);
+                        }}
+                      >
+                        <i className="fa-solid fa-right-to-bracket fa-beat-fade mr-8"></i>
+                        <span className="ml-[5px] mr-10">Đăng nhập</span>
+                      </Button>
                   </div>
-                }
-              >
-                <Avatar size="large">
-                  <i className="fa-solid fa-bars"></i>
-                  <i className="fa-regular fa-user text-20"></i>
-                </Avatar>
-              </Popover>
+                }>
+                  <Avatar size="large">
+                    <i className="fa-solid fa-bars"></i>
+                    <i className="fa-regular fa-user text-20"></i>
+                  </Avatar>
+                </Popover>
+              )}
             </div>
           </div>
         </div>
@@ -188,12 +224,17 @@ export const Header = () => {
 };
 
 const Container = styled.header`
+  &.header-nofixed {
+    transition: all 0.2s linear;
+    z-index: 99999;
+  }
   &.header-fixed {
     position: fixed;
     z-index: 99999;
     top: 0;
     width: 100%;
-    background-color: #fff;
+    background-color: #f3f3f3;
+    transition: all 0.2s linear;
   }
   .header-content {
     max-width: var(--max-width);
@@ -208,7 +249,7 @@ const Container = styled.header`
       padding: 10px 20px;
       margin-left: 0;
       .spanBtn {
-          font-size: 14px;
+        font-size: 14px;
       }
     }
     .btn-search {
