@@ -1,37 +1,14 @@
-## Install Package
+AirBnb Clone Web
+Thành viên: Trung Nguyễn (TN), An Huyên (AH)
 
-1. #TailwindCSS
-   yarn add -D tailwindcss postcss autoprefixer
-   npx tailwindcss init -p
-   tailwind.config.js
-   index.css
+Đóng góp công việc: 
 
-2. react-router-dom
+17 - 18/10: Login, Register (AH)
+19/10: UserInfoPage (AH)
+20/10: HomePage (TN)
+21/10: AdminPage(AH test UI {user, location, room, booking})
+22 - 23 - 24 - 25 - 26/10: Full Chức năng ADMIN (4 page) (AH) 
+27 - 28/10: Room Detail Page(TN)
+29 - 30/10: Room List Page (AH)
 
-<!-- Redux -->
-3. redux
-4. react-redux
-
-<!-- Antd -->
-5. antd (andesign)
-
-<!-- Styled-components -->
-6. styled-components
-7. @types/styled-components
-
-8. axios
-
-9. classnames
-
-10. qs
-
-<!-- Form -->
-11. react-hook-form
-12. zod
-13. @resolverhook
-14. @hookform/resolvers
-
-15. @types/node (phục vụ import)
-
-16. sass
-
+Deloy, Video, Git: AH
