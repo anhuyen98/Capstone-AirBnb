@@ -10,7 +10,7 @@ import { Select } from "antd";
 
 export const RoomDetailTemplate = () => {
   const { room } = useSelector((state: RootState) => state.room)
-  const { booking } = useSelector((state: RootState) => state.booking)
+  // const { booking } = useSelector((state: RootState) => state.booking)
   const dispatch = useAppDispatch()
   const params = useParams()
 

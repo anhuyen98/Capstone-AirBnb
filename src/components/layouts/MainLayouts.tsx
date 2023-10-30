@@ -1,5 +1,5 @@
-import { Footer, Header } from 'components'
-import {Outlet} from 'react-router-dom'
+import { Footer, Header } from "components";
+import { Outlet } from "react-router-dom";
 export const MainLayouts = () => {
   return (
     <div>
@@ -7,5 +7,5 @@ export const MainLayouts = () => {
       <Outlet />
       <Footer />
     </div>
-  )
-}
+  );
+};

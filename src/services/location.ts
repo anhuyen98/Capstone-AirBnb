@@ -7,7 +7,7 @@ const api = apiInstance({
 })
 
 export const locationServices = {
-    getListLocation: () => api.get<ApiResponse<LocationType[]>>(`/phan-trang-tim-kiem?pageIndex=1&pageSize=8`),
+    getListLocation: () => api.get<ApiResponse<LocationType[]>>(''),
     postLocation: (data: LocationType) => api.post<ApiResponse<LocationType>>('', data),
     getLocationId: (id: number) => api.get<ApiResponse<LocationType>>(`/${id}`),
     deleteLocationById: (id: number) => api.delete<ApiResponse<null>>(`/${id}`),

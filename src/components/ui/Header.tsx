@@ -10,19 +10,27 @@ import { authActions } from "store/auth";
 import { PATH } from "constant";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
-// import cn from 'classnames'
+import cn from 'classnames'
 export const Header = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [scroll, setSroll] = useState<boolean>(false) 
   const [Ui, setUi] = useState(false);
+  const handleScroll = () => {
+    if (window.pageYOffset > 20) {
+      setSroll(true)
+      return
+    }
+    setSroll(false)
+  }
   const onChange = (key: string) => {
     console.log(key);
   };
   const toolBar = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const handler = (e) => {
-      if(!toolBar.current.contains(e.target)) {
+      if(!toolBar?.current?.contains(e.target)) {
         setUi(false)
       }
     }
@@ -52,8 +60,16 @@ export const Header = () => {
     const id = getIdUser();
     dispatch(getUserByIdThunk(Number(id)));
   }, [dispatch]);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
   return (
-    <Container>
+    <Container className={cn({
+      'header-fixed': scroll,
+    })}>
       <div className="header-content">
         <div className="mb-[20px] flex justify-center items-center gap-[70px]">
           <img
@@ -172,6 +188,13 @@ export const Header = () => {
 };
 
 const Container = styled.header`
+  &.header-fixed {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+  }
   .header-content {
     max-width: var(--max-width);
     margin: auto;

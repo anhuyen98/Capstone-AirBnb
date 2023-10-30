@@ -125,10 +125,10 @@ export const UserInfoTemplate = () => {
       <div className="w-3/4 m-auto grid grid-cols-9 gap-5">
         <div className="col-start-1 col-span-3 ">
           <div className="p-5 border border-slate-500 rounded-[25px]">
-            <div className="flex flex-col items-center justify-between h-48 my-5">
+            <div className="avatar flex flex-col items-center justify-between h-48 my-5">
               <Avatar size={150} src={user?.avatar} />
               <Upload showUploadList={false} customRequest={handleUploadAvatar}>
-                <Button type="link" onClick={() => {}}>
+                <Button className="btnCNA" type="link" onClick={() => {}}>
                   Cập nhật ảnh
                 </Button>
               </Upload>
@@ -352,5 +352,14 @@ export const ContainerUserInfo = styled.div`
     font-weight: 600;
     font-size: 20px;
     margin: 20px 0 10px;
+  }
+  div.avatar{
+    .ant-avatar-image{
+      z-index: -1;
+  }
+
+  }
+  Button.btnCNA {
+    z-index: -1;
   }
 `;
