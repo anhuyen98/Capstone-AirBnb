@@ -59,3 +59,14 @@ export const updateBookingByIdThunk = createAsyncThunk(
         }
     }
 )
+
+export const getListBookingByIdThunk = createAsyncThunk(
+    'booking/getListBookingById', async(id: number, {rejectWithValue}) => {
+        try {
+            const data = await bookingServices.getListBookingById(id)
+            return data.data.content
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)

@@ -13,54 +13,34 @@ import { RegisterSchema, RegisterSchemaType } from "schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError, sleep } from "utils";
 import { toast } from "react-toastify";
+import { getListBookingByIdThunk } from "store/booking";
+import { fomatDay } from "utils/fomatDay";
 import { getListRoomThunk } from "store/room";
 export const UserInfoTemplate = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const params = useParams();
-  const { listRoom } = useSelector((state: RootState) => state.room)
+  const { listBookingById } = useSelector((state: RootState) => state.booking);
+  const { listRoom } = useSelector((state: RootState) => state.room);
   const dispatch = useAppDispatch();
-
-  type DataType = {
-    id?: number,
-    tenPhong?: string,
-    khach?: number,
-    phongNgu?: number,
-    giuong?: number,
-    phongTam?: number,
-    moTa?: string,
-    giaTien?: number,
-    mayGiat?: boolean,
-    banLa?: boolean,
-    tivi?: boolean,
-    dieuHoa?: boolean,
-    wifi?: boolean,
-    bep?: boolean,
-    doXe?: boolean,
-    hoBoi?: boolean,
-    banUi?: boolean,
-    maViTri?: number,
-    hinhAnh?: string
+  const handleFindRoomById = (id: number) => {
+    const data = listRoom?.find((room) => room.id === id) 
+    return data
   }
-  const data: DataType[] = listRoom?.map((room) => ({
-    id: room.id,
-    tenPhong: room.tenPhong,
-    khach: room.khach,
-    phongNgu: room.phongNgu,
-    giuong: room.giuong,
-    phongTam: room.phongTam,
-    moTa: room.moTa,
-    giaTien: room.giaTien,
-    mayGiat: room.mayGiat,
-    banLa: room.banLa,
-    tivi: room.tivi,
-    dieuHoa: room.dieuHoa,
-    wifi: room.wifi,
-    bep: room.bep,
-    doXe: room.doXe,
-    hoBoi: room.hoBoi,
-    banUi: room.banUi,
-    maViTri: room.maViTri,
-    hinhAnh: room.hinhAnh
+  type DataType = {
+    id?: number;
+    maPhong?: number;
+    ngayDen?: string;
+    ngayDi?: string;
+    soLuongKhach?: number;
+    maNguoiDung?: number;
+  };
+  const data: DataType[] = listBookingById?.map((booking) => ({
+    id: booking.id,
+    maPhong: booking.maPhong,
+    ngayDen: fomatDay(booking.ngayDen.toString()),
+    ngayDi: fomatDay(booking.ngayDi.toString()),
+    soLuongKhach: booking.soLuongKhach,
+    maNguoiDung: booking.maNguoiDung,
   }));
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -116,9 +96,10 @@ export const UserInfoTemplate = () => {
     reset(user);
   }, [user, reset]);
   useEffect(() => {
-    dispatch(getUserByIdThunk(Number(params.userId)))
+    dispatch(getUserByIdThunk(Number(params.userId)));
+    dispatch(getListBookingByIdThunk(Number(params.userId)));
     dispatch(getListRoomThunk())
-  },[dispatch, params])
+  }, [dispatch, params]);
   return (
     <ContainerUserInfo>
       <div className="w-3/4 m-auto grid grid-cols-9 gap-5">
@@ -170,9 +151,9 @@ export const UserInfoTemplate = () => {
               Chỉnh sửa hồ sơ
             </Button>
           </div>
-          <hr className="border border-stone-300"/>
+          <hr className="border border-stone-300" />
           <div>
-            <h4 className="pl-[25px]">Phòng đã thuê</h4>
+            <h4 className="pl-[25px] shadow-lg pb-[20px]">Phòng đã thuê</h4>
             <List
               itemLayout="vertical"
               size="large"
@@ -185,6 +166,7 @@ export const UserInfoTemplate = () => {
               dataSource={data}
               renderItem={(item) => (
                 <List.Item
+                className="shadow-2xl"
                   key={item.id}
                   actions={[
                     <IconText
@@ -203,24 +185,22 @@ export const UserInfoTemplate = () => {
                       key="list-vertical-message"
                     />,
                   ]}
-                  extra={
-                    <img
-                      width={300}
-                      alt="..."
-                      src={item.hinhAnh}
-                    />
-                  }
+                  extra={<img width={400} className="shadow-2xl" alt="..." src={handleFindRoomById(item.maPhong)?.hinhAnh} />}
                 >
                   <List.Item.Meta
-                    // avatar={<Avatar src={item.id} />}
-                    title={item.tenPhong}
-                    description= {
-                      <p className="font-600"> Giá: ${item.giaTien} / ngày</p>
-                    }
+                  // avatar={<Avatar src={item.maPhong} />}
+                  title={handleFindRoomById(item.maPhong)?.tenPhong}
+                  description={
+                    <p className="font-600"> Giá: ${handleFindRoomById(item.maPhong)?.giaTien} / ngày</p>
+                  }
                   />
-                  {item.moTa.substring(0, 100)}. . .
-                  <p className="font-600 my-5">
-                    Số lượng khách: {item.khach}
+                  {/* {handleFindRoomById(item.maPhong)?.moTa?.substring(0, 100)}. . . */}
+                  <div className="spanDay">
+                    <p className="col-span-3 font-600 text-16 my-8">Ngày đến: {item.ngayDen}</p>
+                    <p className="col-span-3 font-600 text-16 my-8">Ngày đi: {item.ngayDi}</p>
+                  </div>
+                  <p className="font-600 my-5 text-right">
+                    Số lượng khách: {item.soLuongKhach}
                   </p>
                 </List.Item>
               )}
@@ -352,13 +332,28 @@ export const ContainerUserInfo = styled.div`
     font-size: 20px;
     margin: 20px 0 10px;
   }
-  div.avatar{
-    .ant-avatar-image{
+  div.avatar {
+    .ant-avatar-image {
       z-index: -1;
-  }
-
+    }
   }
   Button.btnCNA {
     z-index: -1;
+  }
+  div.spanDay {
+    p:nth-child(1) {
+      color: white;
+      background-color: #3be53b;
+      border-radius: 6px;
+      padding: 5px 10px;
+      width: 200px;
+    }
+    p:nth-child(2) {
+      color: white;
+      background-color: #f95e5e;
+      border-radius: 6px;
+      padding: 5px 10px;
+      width: 200px;
+    }
   }
 `;
