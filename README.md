@@ -12,3 +12,4 @@ Thành viên: Trung Nguyễn (TN), An Huyên (AH)
 29 - 30/10: Room List Page (AH)
 
 Deloy, Video, Git: AH
+10/11: Hoàn thành chức năng Booking RoomDetailPage(AH), hiển thị Listbooked UserInfoPage(AH)
